@@ -1,5 +1,7 @@
 package com.dremoline.portabletanks;
 
+import net.minecraft.client.renderer.RenderType;
+import net.minecraft.client.renderer.RenderTypeLookup;
 import net.minecraft.client.renderer.model.IBakedModel;
 import net.minecraft.client.renderer.model.ModelResourceLocation;
 import net.minecraft.util.ResourceLocation;
@@ -18,8 +20,10 @@ public class ClientProxy {
 
     @SubscribeEvent
     public static void onClientSetup(FMLClientSetupEvent e){
-        for(PortableTankType type : PortableTankType.values())
+        for(PortableTankType type : PortableTankType.values()) {
             ClientRegistry.bindTileEntityRenderer(type.getTileEntityType(), PortableTankRenderer::new);
+            RenderTypeLookup.setRenderLayer(type.getBlock(), RenderType.cutout());
+        }
     }
 
     @SubscribeEvent
