@@ -1,0 +1,16 @@
+{
+  "seanbean": {
+    "category": "block",
+    "subtitle": "seanbeansound.unbelievious",
+    "sounds": [
+      "unbelievious:seanbean"
+    ]
+  },
+  "pegasus": {
+    "category": "item",
+    "subtitle": "pegasus.unbelievious",
+    "sounds": [
+      "unbelievious:pegasus"
+    ]
+  }
+}
