@@ -2,70 +2,110 @@ package com.dremoline.portabletanks;
 
 import com.supermartijn642.core.block.BaseTileEntity;
 import net.minecraft.nbt.CompoundNBT;
-import net.minecraft.tileentity.TileEntity;
-import net.minecraft.tileentity.TileEntityType;
+import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
+import net.minecraftforge.fluids.capability.IFluidHandlerItem;
 
 import javax.annotation.Nonnull;
 
 public class PortableTankTileEntity extends BaseTileEntity implements IFluidHandler {
+
     private final PortableTankType type;
     private FluidStack fluidStack = FluidStack.EMPTY;
     private boolean output = false;
+
     public PortableTankTileEntity(PortableTankType type){
-        super(PortableTanks.portable_tank_tile);
+        super(type.getTileEntityType());
         this.type = type;
     }
+
     @Override
-    protected CompoundNBT writeData() {
+    protected CompoundNBT writeData(){
         CompoundNBT compound = new CompoundNBT();
-        compound.putBoolean("output",this.output);
-        compound.put("fluid",this.fluidStack.writeToNBT(new CompoundNBT()));
+        compound.putBoolean("output", this.output);
+        compound.put("fluid", this.fluidStack.writeToNBT(new CompoundNBT()));
         return compound;
     }
 
     @Override
-    protected void readData(CompoundNBT compound) {
+    protected void readData(CompoundNBT compound){
         this.output = compound.getBoolean("output");
         this.fluidStack = FluidStack.loadFluidStackFromNBT(compound.getCompound("fluid"));
     }
 
+    @Nonnull
     @Override
-    public int getTanks() {
+    public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap){
+        return CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY.orEmpty(cap, LazyOptional.of(() -> this));
+    }
+
+    @Override
+    public int getTanks(){
         return 1;
     }
 
     @Nonnull
     @Override
-    public FluidStack getFluidInTank(int tank) {
+    public FluidStack getFluidInTank(int tank){
         return this.fluidStack.copy();
     }
 
     @Override
-    public int getTankCapacity(int tank) {
-        return this.type.tankCapacity;
+    public int getTankCapacity(int tank){
+        return this.type.tankCapacity.get();
     }
 
     @Override
-    public boolean isFluidValid(int tank, @Nonnull FluidStack stack) {
+    public boolean isFluidValid(int tank, @Nonnull FluidStack stack){
         return false;
     }
 
     @Override
-    public int fill(FluidStack resource, FluidAction action) {
+    public int fill(FluidStack resource, FluidAction action){
         return 0;
     }
 
     @Nonnull
     @Override
-    public FluidStack drain(FluidStack resource, FluidAction action) {
-        return null;
+    public FluidStack drain(FluidStack resource, FluidAction action){
+        return FluidStack.EMPTY;
     }
 
     @Nonnull
     @Override
-    public FluidStack drain(int maxDrain, FluidAction action) {
+    public FluidStack drain(int maxDrain, FluidAction action){
         return null;
+    }
+
+    public boolean interactWithItemFluidHandler(IFluidHandlerItem fluidHandler){
+        // just only consider tank 0 from items, as that's probably fine in most cases
+        if(fluidHandler.getTanks() == 0)
+            return false;
+        FluidStack tankFluid = fluidHandler.getFluidInTank(0);
+        if(tankFluid.isEmpty()){
+            if(!this.fluidStack.isEmpty() && fluidHandler.isFluidValid(0, this.fluidStack)){
+                int amount = fluidHandler.fill(this.fluidStack.copy(), FluidAction.EXECUTE);
+                if(amount > 0){
+                    this.fluidStack.shrink(amount);
+                    this.dataChanged();
+                    return true;
+                }
+            }
+        }else if(this.fluidStack.isEmpty() || this.fluidStack.isFluidEqual(tankFluid)){
+            tankFluid = tankFluid.copy();
+            tankFluid.setAmount(this.getTankCapacity(0) - this.fluidStack.getAmount());
+            FluidStack amount = fluidHandler.drain(tankFluid, FluidAction.SIMULATE);
+            if(!amount.isEmpty() && this.fluidStack.isFluidEqual(amount)){
+                amount = fluidHandler.drain(tankFluid, FluidAction.EXECUTE);
+                amount.grow(this.fluidStack.getAmount());
+                this.fluidStack = amount;
+                this.dataChanged();
+                return true;
+            }
+        }
+        return false;
     }
 }
