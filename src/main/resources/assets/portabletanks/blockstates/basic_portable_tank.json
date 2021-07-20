@@ -1,7 +1,7 @@
 {
   "variants": {
     "": {
-      "model": "portabletanks:block/portableblock"
+      "model": "portabletanks:block/basic_portable_tank"
     }
   }
 }

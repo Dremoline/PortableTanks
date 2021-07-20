@@ -22,7 +22,7 @@ import javax.annotation.Nullable;
 
 public class PortableTankBlock extends BaseBlock {
 
-    public static final BlockShape SHAPE = BlockShape.createBlockShape(2, 0, 2, 14, 16, 14);
+    public static final BlockShape SHAPE = BlockShape.createBlockShape(2.5, 0, 2.5, 13.5, 16, 13.5);
     public final PortableTankType type;
 
     public PortableTankBlock(PortableTankType type){

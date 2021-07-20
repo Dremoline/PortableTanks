@@ -18,7 +18,7 @@ import net.minecraftforge.fluids.FluidStack;
  */
 public class PortableTankRenderer extends TileEntityRenderer<PortableTankTileEntity> {
 
-    private static final float SIDE_MARGIN = (float)PortableTankBlock.SHAPE.getStart(Direction.Axis.X) + 0.01f, MIN_Y = 0.01f, MAX_Y = 0.99f;
+    private static final float SIDE_MARGIN = (float)PortableTankBlock.SHAPE.getStart(Direction.Axis.X) + 0.01f, MIN_Y = 1 / 16f, MAX_Y = 1 - MIN_Y;
 
     public PortableTankRenderer(TileEntityRendererDispatcher rendererDispatcher){
         super(rendererDispatcher);
@@ -73,5 +73,14 @@ public class PortableTankRenderer extends TileEntityRenderer<PortableTankTileEnt
         vertexBuilder.vertex(matrix, 1 - SIDE_MARGIN, height, SIDE_MARGIN).color(r, g, b, alpha).uv(minU, maxV).uv2(light).normal(1, 0, 0).endVertex();
         vertexBuilder.vertex(matrix, 1 - SIDE_MARGIN, height, 1 - SIDE_MARGIN).color(r, g, b, alpha).uv(maxU, maxV).uv2(light).normal(1, 0, 0).endVertex();
         vertexBuilder.vertex(matrix, 1 - SIDE_MARGIN, MIN_Y, 1 - SIDE_MARGIN).color(r, g, b, alpha).uv(maxU, minV).uv2(light).normal(1, 0, 0).endVertex();
+        // top
+        if(heightPercentage < 1){
+            minV = sprite.getV(SIDE_MARGIN * 16);
+            maxV = sprite.getV((1 - SIDE_MARGIN) * 16);
+            vertexBuilder.vertex(matrix, SIDE_MARGIN, height, SIDE_MARGIN).color(r, g, b, alpha).uv(minU, minV).uv2(light).normal(0, 1, 0).endVertex();
+            vertexBuilder.vertex(matrix, SIDE_MARGIN, height, 1 - SIDE_MARGIN).color(r, g, b, alpha).uv(minU, maxV).uv2(light).normal(0, 1, 0).endVertex();
+            vertexBuilder.vertex(matrix, 1 - SIDE_MARGIN, height, 1 - SIDE_MARGIN).color(r, g, b, alpha).uv(maxU, maxV).uv2(light).normal(0, 1, 0).endVertex();
+            vertexBuilder.vertex(matrix, 1 - SIDE_MARGIN, height, SIDE_MARGIN).color(r, g, b, alpha).uv(maxU, minV).uv2(light).normal(0, 1, 0).endVertex();
+        }
     }
 }
