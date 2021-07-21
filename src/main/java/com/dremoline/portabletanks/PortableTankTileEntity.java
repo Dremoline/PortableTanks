@@ -2,10 +2,13 @@ package com.dremoline.portabletanks;
 
 import com.supermartijn642.core.block.BaseTileEntity;
 import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.tileentity.ITickableTileEntity;
+import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.Direction;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fluids.FluidStack;
+import net.minecraftforge.fluids.FluidUtil;
 import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandlerItem;
@@ -13,7 +16,7 @@ import net.minecraftforge.fluids.capability.IFluidHandlerItem;
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
 
-public class PortableTankTileEntity extends BaseTileEntity implements IFluidHandler {
+public class PortableTankTileEntity extends BaseTileEntity implements IFluidHandler, ITickableTileEntity {
 
     private final PortableTankType type;
     private FluidStack fluidStack = FluidStack.EMPTY;
@@ -36,6 +39,21 @@ public class PortableTankTileEntity extends BaseTileEntity implements IFluidHand
     protected void readData(CompoundNBT compound){
         this.output = compound.getBoolean("output");
         this.fluidStack = FluidStack.loadFluidStackFromNBT(compound.getCompound("fluid"));
+    }
+
+    @Override
+    public void tick(){
+        if(this.output && !this.fluidStack.isEmpty()){
+            TileEntity tileEntity = this.level.getBlockEntity(this.worldPosition.below());
+            if(tileEntity != null)
+                tileEntity.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY)
+                    .ifPresent(handler -> FluidUtil.tryFluidTransfer(handler, this, 1000, true));
+        }
+    }
+
+    public void toggleOutput(){
+        this.output = !this.output;
+        this.dataChanged();
     }
 
     @Nonnull

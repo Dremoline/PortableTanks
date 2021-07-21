@@ -44,6 +44,12 @@ public class PortableTankBlock extends BaseBlock {
                 }
             }
             return ActionResultType.CONSUME;
+        }else if(stack.isEmpty() && player.isCrouching()){
+            TileEntity tileEntity = world.getBlockEntity(pos);
+            if(tileEntity instanceof PortableTankTileEntity){
+                ((PortableTankTileEntity)tileEntity).toggleOutput();
+                return ActionResultType.sidedSuccess(world.isClientSide);
+            }
         }
         return ActionResultType.PASS;
     }
