@@ -1,10 +1,16 @@
 package com.dremoline.portabletanks;
 
+import com.supermartijn642.core.TextComponents;
 import com.supermartijn642.core.block.BaseBlock;
 import com.supermartijn642.core.block.BlockShape;
+import net.minecraft.block.Block;
 import net.minecraft.block.BlockState;
 import net.minecraft.entity.player.PlayerEntity;
+import net.minecraft.item.BlockItemUseContext;
 import net.minecraft.item.ItemStack;
+import net.minecraft.nbt.CompoundNBT;
+import net.minecraft.state.BooleanProperty;
+import net.minecraft.state.StateContainer;
 import net.minecraft.tileentity.TileEntity;
 import net.minecraft.util.ActionResultType;
 import net.minecraft.util.Hand;
@@ -23,11 +29,14 @@ import javax.annotation.Nullable;
 public class PortableTankBlock extends BaseBlock {
 
     public static final BlockShape SHAPE = BlockShape.createBlockShape(2.5, 0, 2.5, 13.5, 16, 13.5);
+    public static final BooleanProperty OUTPUT = BooleanProperty.create("output");
+
     public final PortableTankType type;
 
     public PortableTankBlock(PortableTankType type){
         super(type.getRegistryName(), true, type.getBlockProperties());
         this.type = type;
+        this.registerDefaultState(this.defaultBlockState().setValue(OUTPUT, false));
     }
 
     @Override
@@ -47,11 +56,24 @@ public class PortableTankBlock extends BaseBlock {
         }else if(stack.isEmpty() && player.isCrouching()){
             TileEntity tileEntity = world.getBlockEntity(pos);
             if(tileEntity instanceof PortableTankTileEntity){
-                ((PortableTankTileEntity)tileEntity).toggleOutput();
+                if(((PortableTankTileEntity)tileEntity).toggleOutput())
+                    player.displayClientMessage(TextComponents.translation("portabletanks.portable_tank.info.output_on").get(), true);
+                else
+                    player.displayClientMessage(TextComponents.translation("portabletanks.portable_tank.info.output_off").get(), true);
                 return ActionResultType.sidedSuccess(world.isClientSide);
             }
         }
         return ActionResultType.PASS;
+    }
+
+    @Nullable
+    @Override
+    public BlockState getStateForPlacement(BlockItemUseContext context){
+        BlockState state = super.getStateForPlacement(context);
+        CompoundNBT compound = context.getItemInHand().getOrCreateTag();
+        if(compound.getCompound("tileData").contains("output"))
+            state = state.setValue(OUTPUT, compound.getCompound("tileData").getBoolean("output"));
+        return state;
     }
 
     @Override
@@ -73,5 +95,10 @@ public class PortableTankBlock extends BaseBlock {
     @Override
     public VoxelShape getVisualShape(BlockState p_230322_1_, IBlockReader p_230322_2_, BlockPos p_230322_3_, ISelectionContext p_230322_4_){
         return BlockShape.empty().getUnderlying();
+    }
+
+    @Override
+    protected void createBlockStateDefinition(StateContainer.Builder<Block,BlockState> builder){
+        builder.add(OUTPUT);
     }
 }

@@ -1,6 +1,7 @@
 package com.dremoline.portabletanks;
 
 import com.supermartijn642.core.block.BaseTileEntity;
+import net.minecraft.block.BlockState;
 import net.minecraft.nbt.CompoundNBT;
 import net.minecraft.tileentity.ITickableTileEntity;
 import net.minecraft.tileentity.TileEntity;
@@ -51,9 +52,12 @@ public class PortableTankTileEntity extends BaseTileEntity implements IFluidHand
         }
     }
 
-    public void toggleOutput(){
+    public boolean toggleOutput(){
         this.output = !this.output;
+        BlockState state = this.getBlockState();
+        this.level.setBlock(this.worldPosition, state.setValue(PortableTankBlock.OUTPUT, this.output), 6);
         this.dataChanged();
+        return this.output;
     }
 
     @Nonnull

@@ -1,7 +1,10 @@
 {
   "variants": {
-    "": {
-      "model": "portabletanks:block/basic_portable_tank"
+    "output=true": {
+      "model": "portabletanks:block/basic_portable_tank_on"
+    },
+    "output=false": {
+      "model": "portabletanks:block/basic_portable_tank_off"
     }
   }
 }
