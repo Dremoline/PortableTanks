@@ -1,6 +1,8 @@
 {
 	"parent": "portabletanks:block/portable_tank",
 	"textures": {
-		"bottom": "portabletanks:block/basic_portable_tank_bottom_off"
+		"bottom": "portabletanks:block/basic_portable_tank_bottom_off",
+		"side": "portabletanks:block/basic_portable_tank_side",
+		"top": "portabletanks:block/basic_portable_tank_top"
 	}
 }
