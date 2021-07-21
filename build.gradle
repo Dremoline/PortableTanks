@@ -80,6 +80,10 @@ dependencies {
 
     // Mekanism
     runtimeOnly fg.deobf('curse.maven:mekanism-268560:3206392')
+    // Just Enough Items
+    runtimeOnly fg.deobf("curse.maven:jei-238222:3383214")
+    // Block Renderer
+    runtimeOnly fg.deobf("curse.maven:block-renderer-380456:3294692")
 }
 
 
