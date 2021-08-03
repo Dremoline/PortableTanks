@@ -28,7 +28,7 @@ public class PortableTankItem extends BlockItem {
     private final PortableTankType type;
 
     public PortableTankItem(PortableTankType type){
-        super(type.getBlock(), new Properties().tab(PortableTanks.GROUP).setISTER(() -> () -> PortableTankItemStackRenderer.INSTANCE));
+        super(type.getBlock(), new Properties().tab(PortableTanks.GROUP).setISTER(() -> PortableTankItemStackRenderer::getInstance));
         this.setRegistryName(type.getRegistryName());
         this.type = type;
     }

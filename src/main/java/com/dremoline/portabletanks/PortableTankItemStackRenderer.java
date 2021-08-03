@@ -21,6 +21,10 @@ public class PortableTankItemStackRenderer extends ItemStackTileEntityRenderer {
 
     public static final PortableTankItemStackRenderer INSTANCE = new PortableTankItemStackRenderer();
 
+    public static PortableTankItemStackRenderer getInstance(){
+        return INSTANCE;
+    }
+
     @Override
     public void renderByItem(ItemStack stack, ItemCameraTransforms.TransformType cameraTransforms, MatrixStack matrixStack, IRenderTypeBuffer buffer, int combinedLight, int combinedOverlay){
         IBakedModel model = ClientUtils.getMinecraft().getItemRenderer().getItemModelShaper().getItemModel(stack);
