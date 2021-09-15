@@ -1,0 +1,22 @@
+{
+  "type": "portabletanks:upgrade_tank",
+  "pattern": [
+    "ABA",
+    "BCB",
+    "ABA"
+  ],
+  "key": {
+    "A": {
+      "tag": "forge:ingots/netherite"
+    },
+    "B": {
+      "tag": "forge:glass_panes"
+    },
+    "C": {
+      "item": "portabletanks:expert_portable_tank"
+    }
+  },
+  "result": {
+    "item": "portabletanks:ultimate_portable_tank"
+  }
+}

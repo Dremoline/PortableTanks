@@ -13,7 +13,9 @@ import java.util.function.Supplier;
 
 public enum PortableTankType {
     BASIC("basic_portable_tank", PortableTanksConfig.basicTankCapacity),
-    ADVANCED("advanced_portable_tank", PortableTanksConfig.advancedTankCapacity);
+    ADVANCED("advanced_portable_tank", PortableTanksConfig.advancedTankCapacity),
+    EXPERT("expert_portable_tank", PortableTanksConfig.expertTankCapacity),
+    ULTIMATE("ultimate_portable_tank", PortableTanksConfig.ultimateTankCapacity);
 
     private final String registryName;
     public final Supplier<Integer> tankCapacity;
