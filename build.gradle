@@ -11,7 +11,7 @@ apply plugin: 'net.minecraftforge.gradle'
 // Only edit below this line, the above code adds and enables the necessary things for Forge to be setup.
 apply plugin: 'eclipse'
 
-version = '1.1.0'
+version = '1.1.1'
 group = 'com.dremoline.portabletanks' // http://maven.apache.org/guides/mini/guide-naming-conventions.html
 archivesBaseName = 'portabletanks'
 
@@ -74,9 +74,9 @@ dependencies {
     minecraft 'net.minecraftforge:forge:1.16.5-36.1.35'
 
     // Core Lib
-    compile fg.deobf("curse.maven:supermartijn642s-core-lib-454372:3390753")
+    compile fg.deobf("curse.maven:supermartijn642s-core-lib-454372:3413422")
     // Config Lib
-    compile fg.deobf("curse.maven:supermartijn642s-config-lib-438332:3357667")
+    compile fg.deobf("curse.maven:supermartijn642s-config-lib-438332:3413938")
 
     // Mekanism
     runtimeOnly fg.deobf('curse.maven:mekanism-268560:3206392')
