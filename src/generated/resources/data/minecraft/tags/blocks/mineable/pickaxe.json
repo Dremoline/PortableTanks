@@ -1,0 +1,9 @@
+{
+  "replace": false,
+  "values": [
+    "portabletanks:basic_portable_tank",
+    "portabletanks:advanced_portable_tank",
+    "portabletanks:expert_portable_tank",
+    "portabletanks:ultimate_portable_tank"
+  ]
+}

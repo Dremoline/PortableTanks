@@ -1,54 +1,55 @@
 package com.dremoline.portabletanks;
 
-import com.mojang.blaze3d.matrix.MatrixStack;
-import com.mojang.blaze3d.vertex.IVertexBuilder;
+import com.mojang.blaze3d.vertex.PoseStack;
+import com.mojang.blaze3d.vertex.VertexConsumer;
 import com.supermartijn642.core.ClientUtils;
-import net.minecraft.client.renderer.IRenderTypeBuffer;
-import net.minecraft.client.renderer.ItemRenderer;
+import net.minecraft.client.Minecraft;
+import net.minecraft.client.model.geom.EntityModelSet;
+import net.minecraft.client.renderer.MultiBufferSource;
+import net.minecraft.client.renderer.entity.ItemRenderer;
 import net.minecraft.client.renderer.RenderType;
-import net.minecraft.client.renderer.RenderTypeLookup;
-import net.minecraft.client.renderer.model.IBakedModel;
-import net.minecraft.client.renderer.model.ItemCameraTransforms;
-import net.minecraft.client.renderer.tileentity.ItemStackTileEntityRenderer;
-import net.minecraft.client.renderer.tileentity.TileEntityRendererDispatcher;
-import net.minecraft.item.BlockItem;
-import net.minecraft.item.ItemStack;
+import net.minecraft.client.renderer.ItemBlockRenderTypes;
+import net.minecraft.client.resources.model.BakedModel;
+import net.minecraft.client.renderer.block.model.ItemTransforms;
+import net.minecraft.client.renderer.BlockEntityWithoutLevelRenderer;
+import net.minecraft.client.renderer.blockentity.BlockEntityRenderDispatcher;
+import net.minecraft.core.BlockPos;
+import net.minecraft.world.item.BlockItem;
+import net.minecraft.world.item.ItemStack;
 
 /**
  * Created 7/19/2021 by SuperMartijn642
  */
-public class PortableTankItemStackRenderer extends ItemStackTileEntityRenderer {
+public class PortableTankItemStackRenderer extends BlockEntityWithoutLevelRenderer {
 
-    public static final PortableTankItemStackRenderer INSTANCE = new PortableTankItemStackRenderer();
-
-    public static PortableTankItemStackRenderer getInstance(){
-        return INSTANCE;
+    public PortableTankItemStackRenderer(BlockEntityRenderDispatcher entityRenderer) {
+        super(entityRenderer, new EntityModelSet());
     }
 
     @Override
-    public void renderByItem(ItemStack stack, ItemCameraTransforms.TransformType cameraTransforms, MatrixStack matrixStack, IRenderTypeBuffer buffer, int combinedLight, int combinedOverlay){
-        IBakedModel model = ClientUtils.getMinecraft().getItemRenderer().getItemModelShaper().getItemModel(stack);
+    public void renderByItem(ItemStack stack, ItemTransforms.TransformType cameraTransforms, PoseStack matrixStack, MultiBufferSource buffer, int combinedLight, int combinedOverlay) {
+        BakedModel model = ClientUtils.getMinecraft().getItemRenderer().getItemModelShaper().getItemModel(stack);
         renderDefaultItem(stack, matrixStack, cameraTransforms, buffer, combinedLight, combinedOverlay, model);
 
-        if(!stack.hasTag() || !stack.getTag().contains("tileData"))
+        if (!stack.hasTag() || !stack.getTag().contains("tileData"))
             return;
 
-        PortableTankTileEntity tile = ((PortableTankBlock)((BlockItem)stack.getItem()).getBlock()).type.createTileEntity();
+        PortableTankTileEntity tile = ((PortableTankBlock) ((BlockItem) stack.getItem()).getBlock()).type.createTileEntity(new BlockPos(0,0,0), ((BlockItem)stack.getItem()).getBlock().defaultBlockState());
         tile.readData(stack.getTag().getCompound("tileData"));
 
-        TileEntityRendererDispatcher.instance.renderItem(tile, matrixStack, buffer, combinedLight, combinedOverlay);
+        Minecraft.getInstance().getBlockEntityRenderDispatcher().renderItem(tile, matrixStack, buffer, combinedLight, combinedOverlay);
     }
 
-    private static void renderDefaultItem(ItemStack itemStack, MatrixStack matrixStack, ItemCameraTransforms.TransformType cameraTransforms, IRenderTypeBuffer renderTypeBuffer, int combinedLight, int combinedOverlay, IBakedModel model){
+    private static void renderDefaultItem(ItemStack itemStack, PoseStack matrixStack, ItemTransforms.TransformType cameraTransforms, MultiBufferSource renderTypeBuffer, int combinedLight, int combinedOverlay, BakedModel model) {
         ItemRenderer renderer = ClientUtils.getMinecraft().getItemRenderer();
 
         matrixStack.pushPose();
 
-        if(model.isLayered()){
+        if (model.isLayered()) {
             net.minecraftforge.client.ForgeHooksClient.drawItemLayered(renderer, model, itemStack, matrixStack, renderTypeBuffer, combinedLight, combinedOverlay, true);
-        }else{
-            RenderType rendertype = RenderTypeLookup.getRenderType(itemStack, true);
-            IVertexBuilder ivertexbuilder;
+        } else {
+            RenderType rendertype = ItemBlockRenderTypes.getRenderType(itemStack, true);
+            VertexConsumer ivertexbuilder;
 
             ivertexbuilder = ItemRenderer.getFoilBufferDirect(renderTypeBuffer, rendertype, true, itemStack.hasFoil());
 

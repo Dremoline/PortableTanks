@@ -1,15 +1,16 @@
 package com.dremoline.portabletanks;
 
-import net.minecraft.block.Block;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemGroup;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.IRecipeSerializer;
-import net.minecraft.tileentity.TileEntityType;
-import net.minecraft.util.ResourceLocation;
+import net.minecraft.world.level.block.Block;
+import net.minecraft.world.item.Item;
+import net.minecraft.world.item.CreativeModeTab;
+import net.minecraft.world.item.ItemStack;
+import net.minecraft.world.item.crafting.RecipeSerializer;
+import net.minecraft.world.level.block.entity.BlockEntityType;
+import net.minecraft.resources.ResourceLocation;
 import net.minecraftforge.event.RegistryEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.forge.event.lifecycle.GatherDataEvent;
 
 /**
  * Created 7/7/2020 by SuperMartijn642
@@ -17,7 +18,7 @@ import net.minecraftforge.fml.common.Mod;
 @Mod("portabletanks")
 public class PortableTanks {
 
-    public static final ItemGroup GROUP = new ItemGroup("portabletanks") {
+    public static final CreativeModeTab GROUP = new CreativeModeTab("portabletanks") {
         @Override
         public ItemStack makeIcon(){
             return new ItemStack(PortableTankType.BASIC.getBlock());
@@ -38,7 +39,7 @@ public class PortableTanks {
         }
 
         @SubscribeEvent
-        public static void onTileRegistry(final RegistryEvent.Register<TileEntityType<?>> e){
+        public static void onTileRegistry(final RegistryEvent.Register<BlockEntityType<?>> e){
             for(PortableTankType type : PortableTankType.values())
                 type.registerTileEntityType(e);
         }
@@ -50,8 +51,13 @@ public class PortableTanks {
         }
 
         @SubscribeEvent
-        public static void onRecipeRegistry(final RegistryEvent.Register<IRecipeSerializer<?>> e){
+        public static void onRecipeRegistry(final RegistryEvent.Register<RecipeSerializer<?>> e){
             e.getRegistry().register(PortableTankUpgradeRecipe.SERIALIZER.setRegistryName(new ResourceLocation("portabletanks", "upgrade_tank")));
+        }
+
+        @SubscribeEvent
+        public static void onGatherData(GatherDataEvent e){
+            e.getGenerator().addProvider(new PortableTankBlockTagsProvider(e));
         }
     }
 
