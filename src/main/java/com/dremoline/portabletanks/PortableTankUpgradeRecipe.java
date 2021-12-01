@@ -50,7 +50,7 @@ public class PortableTankUpgradeRecipe extends ShapedRecipe {
 
     @Override
     public IRecipeSerializer<?> getSerializer(){
-        return super.getSerializer();
+        return SERIALIZER;
     }
 
     public static class Serializer extends ForgeRegistryEntry<IRecipeSerializer<?>> implements IRecipeSerializer<PortableTankUpgradeRecipe> {
