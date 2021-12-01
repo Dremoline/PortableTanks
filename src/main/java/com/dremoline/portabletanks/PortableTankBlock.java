@@ -41,14 +41,23 @@ public class PortableTankBlock extends BaseBlock {
 
     @Override
     public ActionResultType use(BlockState state, World world, BlockPos pos, PlayerEntity player, Hand hand, BlockRayTraceResult rayTraceResult){
-        ItemStack stack = player.getItemInHand(hand);
-        LazyOptional<IFluidHandlerItem> fluidHandlerOptional = stack.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY);
+        ItemStack stack = player.getItemInHand(hand).copy();
+        ItemStack fillStack = stack.copy();
+        fillStack.setCount(1);
+        LazyOptional<IFluidHandlerItem> fluidHandlerOptional = fillStack.getCapability(CapabilityFluidHandler.FLUID_HANDLER_ITEM_CAPABILITY);
         if(fluidHandlerOptional.isPresent()){
             TileEntity tileEntity = world.getBlockEntity(pos);
             if(tileEntity instanceof PortableTankTileEntity){
                 IFluidHandlerItem fluidHandler = fluidHandlerOptional.resolve().get();
                 if(((PortableTankTileEntity)tileEntity).interactWithItemFluidHandler(fluidHandler)){
-                    player.setItemInHand(hand, fluidHandler.getContainer());
+                    stack.shrink(1);
+                    if(stack.isEmpty())
+                        player.setItemInHand(hand, fluidHandler.getContainer());
+                    else{
+                        player.setItemInHand(hand, stack);
+                        if(!player.inventory.add(fluidHandler.getContainer()))
+                            player.drop(fluidHandler.getContainer(), false);
+                    }
                     return ActionResultType.sidedSuccess(world.isClientSide);
                 }
             }
