@@ -110,7 +110,7 @@ public class PortableTankItem extends BlockItem {
             if(resource == null || resource.isEmpty())
                 return FluidStack.EMPTY;
             FluidStack current = this.getFluid();
-            if(!current.isFluidEqual(resource))
+            if(current.isEmpty() || !current.isFluidEqual(resource))
                 return FluidStack.EMPTY;
             int amount = Math.min(current.getAmount(), resource.getAmount());
             if(action.execute()){
@@ -128,6 +128,8 @@ public class PortableTankItem extends BlockItem {
             if(maxDrain == 0)
                 return FluidStack.EMPTY;
             FluidStack current = this.getFluid();
+            if(current.isEmpty())
+                return FluidStack.EMPTY;
             int amount = Math.min(current.getAmount(), maxDrain);
             if(action.execute()){
                 FluidStack newStack = current.copy();
