@@ -1,0 +1,11 @@
+{
+  "block.portabletanks.basic_portable_tank": "Einfacher Tragbarer Tank",
+  "block.portabletanks.advanced_portable_tank": "Verbesserter Tragbarer Tank",
+  "block.portabletanks.expert_portable_tank": "Fortgeschrittener Tragbarer Tank",
+  "block.portabletanks.ultimate_portable_tank": "Ultimativer Tragbarer Tank",
+  "portabletanks.portable_tank.info.capacity": "Kapazität: %d mB",
+  "portabletanks.portable_tank.info.stored": "Gespeichert: %1$s %2$d / %3$d mB",
+  "portabletanks.portable_tank.info.output_on": "§7Abfluß: §6Ein",
+  "portabletanks.portable_tank.info.output_off": "§7Abfluß: §6Aus",
+  "itemGroup.portabletanks": "Portable Tanks"
+}
