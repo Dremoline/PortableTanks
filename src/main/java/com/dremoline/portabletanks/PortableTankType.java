@@ -8,7 +8,7 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Material;
-import net.minecraftforge.event.RegistryEvent;
+import net.minecraftforge.registries.IForgeRegistry;
 
 import java.util.function.Supplier;
 
@@ -49,19 +49,18 @@ public enum PortableTankType {
         return new PortableTankTileEntity(this, pos, state);
     }
 
-    public void registerBlock(RegistryEvent.Register<Block> e) {
+    public void registerBlock(IForgeRegistry<Block> registry) {
         this.block = new PortableTankBlock(this);
-        e.getRegistry().register(this.block);
+        registry.register(this.getRegistryName(), this.block);
     }
 
-    public void registerTileEntityType(RegistryEvent.Register<BlockEntityType<?>> e) {
+    public void registerTileEntityType(IForgeRegistry<BlockEntityType<?>> registry) {
         this.tileEntityType = BlockEntityType.Builder.of((pos, state) -> new PortableTankTileEntity(this, pos, state), this.block).build(null);
-        this.tileEntityType.setRegistryName(this.getRegistryName() + "_tile");
-        e.getRegistry().register(this.tileEntityType);
+        registry.register(this.getRegistryName() + "_tile", this.tileEntityType);
     }
 
-    public void registerItem(RegistryEvent.Register<Item> e) {
+    public void registerItem(IForgeRegistry<Item> registry) {
         this.item = new PortableTankItem(this);
-        e.getRegistry().register(this.item);
+        registry.register(this.getRegistryName(), this.item);
     }
 }

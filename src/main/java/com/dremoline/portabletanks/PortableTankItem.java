@@ -36,7 +36,6 @@ public class PortableTankItem extends BlockItem {
 
     public PortableTankItem(PortableTankType type){
         super(type.getBlock(), new Properties().tab(PortableTanks.GROUP));
-        this.setRegistryName(type.getRegistryName());
         this.type = type;
     }
 
