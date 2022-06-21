@@ -1,6 +1,7 @@
 package com.dremoline.portabletanks;
 
-import com.supermartijn642.configlib.ModConfigBuilder;
+import com.supermartijn642.configlib.api.ConfigBuilders;
+import com.supermartijn642.configlib.api.IConfigBuilder;
 
 import java.util.function.Supplier;
 
@@ -15,7 +16,7 @@ public class PortableTanksConfig {
     public static final Supplier<Integer> ultimateTankCapacity;
 
     static{
-        ModConfigBuilder builder = new ModConfigBuilder("portabletanks");
+        IConfigBuilder builder = ConfigBuilders.newTomlConfig("portabletanks", null, false);
 
         basicTankCapacity = builder.comment("How much fluid should the basic tank be able to hold (in millibuckets)?").define("basicTankCapacity", 8000, 1000, 256000);
         advancedTankCapacity = builder.comment("How much fluid should the advanced tank be able to hold (in millibuckets)?").define("advancedTankCapacity", 16000, 1000, 256000);
