@@ -79,9 +79,9 @@ dependencies {
     minecraft 'net.minecraftforge:forge:1.17.1-37.0.104'
 
     // Core Lib
-    implementation fg.deobf("curse.maven:supermartijn642s-core-lib-454372:3413424")
+    implementation fg.deobf("curse.maven:supermartijn642s-core-lib-454372:3773951")
     // Config Lib
-    implementation fg.deobf("curse.maven:supermartijn642s-config-lib-438332:3413940")
+    implementation fg.deobf("curse.maven:supermartijn642s-config-lib-438332:3840232")
 }
 
 

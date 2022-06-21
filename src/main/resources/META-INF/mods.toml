@@ -55,13 +55,13 @@ description='''portabletanks adds portable tanks'''
 [[dependencies.portabletanks]]
     modId="supermartijn642corelib"
     mandatory=true
-    versionRange="[1.0.12,1.1.0)"
+    versionRange="[1.0.18,1.1.0)"
     ordering="NONE"
     side="BOTH"
 # Config Lib
 [[dependencies.portabletanks]]
     modId="supermartijn642configlib"
     mandatory=true
-    versionRange="[1.0.9,1.1.0)"
+    versionRange="[1.1.4,)"
     ordering="NONE"
     side="BOTH"
