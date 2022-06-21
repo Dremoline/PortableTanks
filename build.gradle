@@ -4,7 +4,7 @@ buildscript {
         mavenCentral()
     }
     dependencies {
-        classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '4.1.+', changing: true
+        classpath group: 'net.minecraftforge.gradle', name: 'ForgeGradle', version: '5.1.+', changing: true
         classpath "org.spongepowered:mixingradle:0.7.+"
     }
 }
@@ -76,9 +76,9 @@ dependencies {
     minecraft 'net.minecraftforge:forge:1.16.5-36.1.35'
 
     // Core Lib
-    compile fg.deobf("curse.maven:supermartijn642s-core-lib-454372:3773950")
+    implementation fg.deobf("curse.maven:supermartijn642s-core-lib-454372:3773950")
     // Config Lib
-    compile fg.deobf("curse.maven:supermartijn642s-config-lib-438332:3840231")
+    implementation fg.deobf("curse.maven:supermartijn642s-config-lib-438332:3840231")
 
     // Mekanism
     runtimeOnly fg.deobf('curse.maven:mekanism-268560:3206392')
