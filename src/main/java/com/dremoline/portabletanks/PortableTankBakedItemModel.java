@@ -1,8 +1,8 @@
 package com.dremoline.portabletanks;
 
 import com.mojang.blaze3d.vertex.PoseStack;
-import net.minecraft.client.resources.model.BakedModel;
 import net.minecraft.client.renderer.block.model.ItemTransforms;
+import net.minecraft.client.resources.model.BakedModel;
 import net.minecraftforge.client.model.BakedModelWrapper;
 
 /**
@@ -20,8 +20,8 @@ public class PortableTankBakedItemModel extends BakedModelWrapper<BakedModel> {
     }
 
     @Override
-    public BakedModel handlePerspective(ItemTransforms.TransformType cameraTransformType, PoseStack mat){
-        super.handlePerspective(cameraTransformType, mat);
+    public BakedModel applyTransform(ItemTransforms.TransformType cameraTransformType, PoseStack mat, boolean applyLeftHandTransform){
+        super.applyTransform(cameraTransformType, mat, applyLeftHandTransform);
         return this;
     }
 
