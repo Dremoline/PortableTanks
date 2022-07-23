@@ -1,5 +1,6 @@
 package com.dremoline.portabletanks;
 
+import com.dremoline.portabletanks.compatibility.PortableTanksTheOneProbePlugin;
 import net.minecraft.world.item.CreativeModeTab;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.item.ItemStack;
@@ -9,6 +10,7 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraftforge.data.event.GatherDataEvent;
 import net.minecraftforge.eventbus.api.SubscribeEvent;
 import net.minecraftforge.fml.common.Mod;
+import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 import net.minecraftforge.registries.ForgeRegistries;
 import net.minecraftforge.registries.IForgeRegistry;
 import net.minecraftforge.registries.RegisterEvent;
@@ -29,6 +31,7 @@ public class PortableTanks {
     };
 
     public PortableTanks(){
+        FMLJavaModLoadingContext.get().getModEventBus().addListener(PortableTanksTheOneProbePlugin::interModEnqueue);
         PortableTanksConfig.init();
     }
 

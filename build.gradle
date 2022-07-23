@@ -54,7 +54,7 @@ minecraft {
 
         data {
             workingDirectory project.file('run')
-            
+
             property 'forge.logging.markers', 'REGISTRIES'
 
             args '--mod', 'portabletanks', '--all', '--output', file('src/generated/resources/'), '--existing', file('src/main/resources/')
@@ -77,12 +77,18 @@ repositories {
 }
 
 dependencies {
-    minecraft 'net.minecraftforge:forge:1.19-41.0.94'
+    minecraft 'net.minecraftforge:forge:1.19-41.0.110'
 
     // Core Lib
     implementation fg.deobf("curse.maven:supermartijn642s-core-lib-454372:3863130")
     // Config Lib
     implementation fg.deobf("curse.maven:supermartijn642s-config-lib-438332:3871792")
+
+    // Jade
+    implementation fg.deobf("curse.maven:jade-324717:3872400")
+
+    // The One Probe
+    implementation fg.deobf("curse.maven:the-one-probe-245211:3871444")
 }
 
 
