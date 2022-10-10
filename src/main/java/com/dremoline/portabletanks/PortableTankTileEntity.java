@@ -28,6 +28,14 @@ public class PortableTankTileEntity extends BaseTileEntity implements IFluidHand
         this.type = type;
     }
 
+    public PortableTankType getTankType() {
+        return this.type;
+    }
+
+    public FluidStack getTankContent() {
+        return this.fluidStack;
+    }
+
     @Override
     protected CompoundTag writeData() {
         CompoundTag compound = new CompoundTag();

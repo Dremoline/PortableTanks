@@ -7,5 +7,6 @@
   "portabletanks.portable_tank.info.stored": "Stored: %1$s %2$d / %3$d mB",
   "portabletanks.portable_tank.info.output_on": "§7Output: §6On",
   "portabletanks.portable_tank.info.output_off": "§7Output: §6Off",
+  "config.jade.plugin_portabletanks.portable_tank_component": "Portable Tanks",
   "itemGroup.portabletanks": "Portable Tanks"
 }
