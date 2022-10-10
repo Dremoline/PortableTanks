@@ -52,7 +52,7 @@ public class PortableTankBlock extends BaseBlock implements EntityBlock {
             BlockEntity tileEntity = world.getBlockEntity(pos);
             if(tileEntity instanceof PortableTankTileEntity){
                 IFluidHandlerItem fluidHandler = fluidHandlerOptional.resolve().get();
-                if(((PortableTankTileEntity)tileEntity).interactWithItemFluidHandler(fluidHandler)){
+                if(((PortableTankTileEntity)tileEntity).interactWithItemFluidHandler(fluidHandler, player)){
                     stack.shrink(1);
                     if(stack.isEmpty())
                         player.setItemInHand(hand, fluidHandler.getContainer());

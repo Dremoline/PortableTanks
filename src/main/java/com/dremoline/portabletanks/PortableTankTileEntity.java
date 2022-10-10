@@ -4,8 +4,11 @@ import com.supermartijn642.core.block.BaseTileEntity;
 import net.minecraft.core.BlockPos;
 import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
+import net.minecraft.sounds.SoundEvent;
+import net.minecraft.world.entity.player.Player;
 import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
+import net.minecraftforge.common.SoundActions;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fluids.FluidStack;
@@ -138,7 +141,7 @@ public class PortableTankTileEntity extends BaseTileEntity implements IFluidHand
         return returnStack;
     }
 
-    public boolean interactWithItemFluidHandler(IFluidHandlerItem fluidHandler) {
+    public boolean interactWithItemFluidHandler(IFluidHandlerItem fluidHandler, Player player) {
         // just only consider tank 0 from items, as that's probably fine in most cases
         if (fluidHandler.getTanks() == 0)
             return false;
@@ -147,6 +150,7 @@ public class PortableTankTileEntity extends BaseTileEntity implements IFluidHand
             if (!this.fluidStack.isEmpty() && fluidHandler.isFluidValid(0, this.fluidStack)) {
                 int amount = fluidHandler.fill(this.fluidStack.copy(), FluidAction.EXECUTE);
                 if (amount > 0) {
+                    this.fluidStack.getFluid().getPickupSound().ifPresent(player::playSound);
                     this.fluidStack.shrink(amount);
                     this.dataChanged();
                     return true;
@@ -160,6 +164,10 @@ public class PortableTankTileEntity extends BaseTileEntity implements IFluidHand
                 amount = fluidHandler.drain(tankFluid, FluidAction.EXECUTE);
                 amount.grow(this.fluidStack.getAmount());
                 this.fluidStack = amount;
+                SoundEvent soundEvent = this.fluidStack.getFluid().getFluidType().getSound(SoundActions.BUCKET_EMPTY);
+                if (soundEvent != null) {
+                    player.playSound(soundEvent);
+                }
                 this.dataChanged();
                 return true;
             }
