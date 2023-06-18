@@ -15,7 +15,7 @@ public class PortableTanksConfig {
     public static final Supplier<Integer> expertTankCapacity;
     public static final Supplier<Integer> ultimateTankCapacity;
 
-    static{
+    static {
         IConfigBuilder builder = ConfigBuilders.newTomlConfig("portabletanks", null, false);
 
         basicTankCapacity = builder.comment("How much fluid should the basic tank be able to hold (in millibuckets)?").define("basicTankCapacity", 8000, 1000, 256000);
@@ -26,7 +26,7 @@ public class PortableTanksConfig {
         builder.build();
     }
 
-    public static void init(){
+    public static void init() {
         // just to cause this class to load
     }
 

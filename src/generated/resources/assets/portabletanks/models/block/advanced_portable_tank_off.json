@@ -1,0 +1,8 @@
+{
+  "parent": "portabletanks:block/portable_tank",
+  "textures": {
+    "bottom": "portabletanks:block/advanced_portable_tank_bottom_off",
+    "side": "portabletanks:block/advanced_portable_tank_side",
+    "top": "portabletanks:block/advanced_portable_tank_top"
+  }
+}
