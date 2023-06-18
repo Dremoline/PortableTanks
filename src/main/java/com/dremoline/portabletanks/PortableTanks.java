@@ -1,15 +1,11 @@
 package com.dremoline.portabletanks;
 
 import com.dremoline.portabletanks.compatibility.PortableTanksTheOneProbePlugin;
-import net.minecraft.block.Block;
-import net.minecraft.item.Item;
-import net.minecraft.item.ItemGroup;
-import net.minecraft.item.ItemStack;
-import net.minecraft.item.crafting.IRecipeSerializer;
-import net.minecraft.tileentity.TileEntityType;
-import net.minecraft.util.ResourceLocation;
-import net.minecraftforge.event.RegistryEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
+import com.dremoline.portabletanks.generators.*;
+import com.supermartijn642.core.CommonUtils;
+import com.supermartijn642.core.item.CreativeItemGroup;
+import com.supermartijn642.core.registry.GeneratorRegistrationHandler;
+import com.supermartijn642.core.registry.RegistrationHandler;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 
@@ -19,43 +15,29 @@ import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
 @Mod("portabletanks")
 public class PortableTanks {
 
-    public static final ItemGroup GROUP = new ItemGroup("portabletanks") {
-        @Override
-        public ItemStack makeIcon() {
-            return new ItemStack(PortableTankType.BASIC.getBlock());
-        }
-    };
+    public static final CreativeItemGroup GROUP = CreativeItemGroup.create("portabletanks", () -> PortableTankType.BASIC.getBlock().asItem());
 
     public PortableTanks() {
         FMLJavaModLoadingContext.get().getModEventBus().addListener(PortableTanksTheOneProbePlugin::interModEnqueue);
+
+        RegistrationHandler handler = RegistrationHandler.get("portabletanks");
+        for (PortableTankType type : PortableTankType.values()) {
+            handler.registerBlockCallback(type::registerBlock);
+            handler.registerBlockEntityTypeCallback(type::registerBlockEntityType);
+            handler.registerItemCallback(type::registerItem);
+        }
+        handler.registerRecipeSerializer("upgrade_tank", PortableTankUpgradeRecipe.SERIALIZER);
+
+        if (CommonUtils.getEnvironmentSide().isClient())
+            PortableTanksClient.initialize();
         PortableTanksConfig.init();
+
+        GeneratorRegistrationHandler generatorHandler = GeneratorRegistrationHandler.get("portabletanks");
+        generatorHandler.addGenerator(PortableTanksBlockStateGenerator::new);
+        generatorHandler.addGenerator(PortableTanksLanguageGenerator::new);
+        generatorHandler.addGenerator(PortableTanksLootTableGenerator::new);
+        generatorHandler.addGenerator(PortableTanksModelGenerator::new);
+        generatorHandler.addGenerator(PortableTanksRecipeGenerator::new);
+        generatorHandler.addGenerator(PortableTanksTagGenerator::new);
     }
-
-    @Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD)
-    public static class RegistryEvents {
-
-        @SubscribeEvent
-        public static void onBlockRegistry(final RegistryEvent.Register<Block> e) {
-            for (PortableTankType type : PortableTankType.values())
-                type.registerBlock(e);
-        }
-
-        @SubscribeEvent
-        public static void onTileRegistry(final RegistryEvent.Register<TileEntityType<?>> e) {
-            for (PortableTankType type : PortableTankType.values())
-                type.registerTileEntityType(e);
-        }
-
-        @SubscribeEvent
-        public static void onItemRegistry(final RegistryEvent.Register<Item> e) {
-            for (PortableTankType type : PortableTankType.values())
-                type.registerItem(e);
-        }
-
-        @SubscribeEvent
-        public static void onRecipeRegistry(final RegistryEvent.Register<IRecipeSerializer<?>> e) {
-            e.getRegistry().register(PortableTankUpgradeRecipe.SERIALIZER.setRegistryName(new ResourceLocation("portabletanks", "upgrade_tank")));
-        }
-    }
-
 }

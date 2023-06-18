@@ -1,5 +1,7 @@
 package com.dremoline.portabletanks;
 
+import com.supermartijn642.core.block.BaseBlockEntityType;
+import com.supermartijn642.core.registry.RegistrationHandler;
 import net.minecraft.block.AbstractBlock;
 import net.minecraft.block.Block;
 import net.minecraft.block.SoundType;
@@ -7,7 +9,6 @@ import net.minecraft.block.material.Material;
 import net.minecraft.item.Item;
 import net.minecraft.tileentity.TileEntityType;
 import net.minecraftforge.common.ToolType;
-import net.minecraftforge.event.RegistryEvent;
 
 import java.util.function.Supplier;
 
@@ -20,47 +21,46 @@ public enum PortableTankType {
     private final String registryName;
     public final Supplier<Integer> tankCapacity;
     private PortableTankBlock block;
-    private TileEntityType<PortableTankTileEntity> tileEntityType;
+    private BaseBlockEntityType<PortableTankBlockEntity> blockEntityType;
     private PortableTankItem item;
 
-    PortableTankType(String registryName, Supplier<Integer> tankCapacity){
+    PortableTankType(String registryName, Supplier<Integer> tankCapacity) {
         this.registryName = registryName;
         this.tankCapacity = tankCapacity;
     }
 
-    public String getRegistryName(){
+    public String getRegistryName() {
         return this.registryName;
     }
 
-    public AbstractBlock.Properties getBlockProperties(){
+    public AbstractBlock.Properties getBlockProperties() {
         return AbstractBlock.Properties.of(Material.METAL).harvestTool(ToolType.PICKAXE).sound(SoundType.METAL).strength(5);
     }
 
-    public PortableTankBlock getBlock(){
+    public PortableTankBlock getBlock() {
         return this.block;
     }
 
-    public TileEntityType<PortableTankTileEntity> getTileEntityType(){
-        return this.tileEntityType;
+    public TileEntityType<PortableTankBlockEntity> getBlockEntityType() {
+        return this.blockEntityType;
     }
 
-    public PortableTankTileEntity createTileEntity(){
-        return new PortableTankTileEntity(this);
+    public PortableTankBlockEntity createBlockEntity() {
+        return new PortableTankBlockEntity(this);
     }
 
-    public void registerBlock(RegistryEvent.Register<Block> e){
+    public void registerBlock(RegistrationHandler.Helper<Block> helper) {
         this.block = new PortableTankBlock(this);
-        e.getRegistry().register(this.block);
+        helper.register(this.registryName, this.block);
     }
 
-    public void registerTileEntityType(RegistryEvent.Register<TileEntityType<?>> e){
-        this.tileEntityType = TileEntityType.Builder.of(() -> new PortableTankTileEntity(this), this.block).build(null);
-        this.tileEntityType.setRegistryName(this.getRegistryName() + "_tile");
-        e.getRegistry().register(this.tileEntityType);
+    public void registerBlockEntityType(RegistrationHandler.Helper<TileEntityType<?>> helper) {
+        this.blockEntityType = BaseBlockEntityType.create(() -> new PortableTankBlockEntity(this), this.block);
+        helper.register(this.registryName + "_tile", this.blockEntityType);
     }
 
-    public void registerItem(RegistryEvent.Register<Item> e){
+    public void registerItem(RegistrationHandler.Helper<Item> helper) {
         this.item = new PortableTankItem(this);
-        e.getRegistry().register(this.item);
+        helper.register(this.registryName, this.item);
     }
 }

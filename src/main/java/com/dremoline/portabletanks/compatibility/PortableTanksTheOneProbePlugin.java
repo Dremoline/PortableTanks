@@ -1,6 +1,6 @@
 package com.dremoline.portabletanks.compatibility;
 
-import com.dremoline.portabletanks.PortableTankTileEntity;
+import com.dremoline.portabletanks.PortableTankBlockEntity;
 import com.supermartijn642.core.TextComponents;
 import mcjty.theoneprobe.api.*;
 import net.minecraft.block.BlockState;
@@ -37,9 +37,9 @@ public class PortableTanksTheOneProbePlugin {
         @Override
         public void addProbeInfo(ProbeMode probeMode, IProbeInfo probeInfo, PlayerEntity player, World level, BlockState blockState, IProbeHitData probeHitData) {
             TileEntity entity = level.getBlockEntity(probeHitData.getPos());
-            if (entity instanceof PortableTankTileEntity) {
-                int capacity = ((PortableTankTileEntity) entity).getTankType().tankCapacity.get();
-                FluidStack contents = ((PortableTankTileEntity) entity).getTankContent();
+            if (entity instanceof PortableTankBlockEntity) {
+                int capacity = ((PortableTankBlockEntity) entity).getTankType().tankCapacity.get();
+                FluidStack contents = ((PortableTankBlockEntity) entity).getTankContent();
                 ITextComponent capacityText = TextComponents.number(capacity).color(TextFormatting.GOLD).get();
                 if (contents.isEmpty()) {
                     ITextComponent text = TextComponents.translation("portabletanks.portable_tank.info.capacity", capacityText).get();
