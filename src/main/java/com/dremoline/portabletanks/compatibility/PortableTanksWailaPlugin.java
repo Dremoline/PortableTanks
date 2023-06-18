@@ -1,7 +1,7 @@
 package com.dremoline.portabletanks.compatibility;
 
 import com.dremoline.portabletanks.PortableTankBlock;
-import com.dremoline.portabletanks.PortableTankTileEntity;
+import com.dremoline.portabletanks.PortableTankBlockEntity;
 import com.supermartijn642.core.TextComponents;
 import mcp.mobius.waila.api.*;
 import mcp.mobius.waila.api.config.IPluginConfig;
@@ -20,9 +20,9 @@ public class PortableTanksWailaPlugin implements IWailaPlugin, IComponentProvide
     @Override
     public void appendTooltip(ITooltip tooltip, BlockAccessor blockAccessor, IPluginConfig iPluginConfig) {
         BlockEntity entity = blockAccessor.getBlockEntity();
-        if (entity instanceof PortableTankTileEntity) {
-            int capacity = ((PortableTankTileEntity) entity).getTankType().tankCapacity.get();
-            FluidStack contents = ((PortableTankTileEntity) entity).getTankContent();
+        if (entity instanceof PortableTankBlockEntity) {
+            int capacity = ((PortableTankBlockEntity) entity).getTankType().tankCapacity.get();
+            FluidStack contents = ((PortableTankBlockEntity) entity).getTankContent();
             Component capacityText = TextComponents.number(capacity).color(ChatFormatting.GOLD).get();
             if (contents.isEmpty()) {
                 Component text = TextComponents.translation("portabletanks.portable_tank.info.capacity", capacityText).get();

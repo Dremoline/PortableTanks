@@ -1,5 +1,7 @@
 package com.dremoline.portabletanks;
 
+import com.supermartijn642.core.block.BaseBlockEntityType;
+import com.supermartijn642.core.registry.RegistrationHandler;
 import net.minecraft.core.BlockPos;
 import net.minecraft.world.item.Item;
 import net.minecraft.world.level.block.Block;
@@ -8,7 +10,6 @@ import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraft.world.level.material.Material;
-import net.minecraftforge.event.RegistryEvent;
 
 import java.util.function.Supplier;
 
@@ -21,7 +22,7 @@ public enum PortableTankType {
     private final String registryName;
     public final Supplier<Integer> tankCapacity;
     private PortableTankBlock block;
-    private BlockEntityType<PortableTankTileEntity> tileEntityType;
+    private BaseBlockEntityType<PortableTankBlockEntity> blockEntityType;
     private PortableTankItem item;
 
     PortableTankType(String registryName, Supplier<Integer> tankCapacity) {
@@ -41,27 +42,26 @@ public enum PortableTankType {
         return this.block;
     }
 
-    public BlockEntityType<PortableTankTileEntity> getTileEntityType() {
-        return this.tileEntityType;
+    public BaseBlockEntityType<PortableTankBlockEntity> getBlockEntityType() {
+        return this.blockEntityType;
     }
 
-    public PortableTankTileEntity createTileEntity(BlockPos pos, BlockState state) {
-        return new PortableTankTileEntity(this, pos, state);
+    public PortableTankBlockEntity createBlockEntity(BlockPos pos, BlockState state) {
+        return new PortableTankBlockEntity(this, pos, state);
     }
 
-    public void registerBlock(RegistryEvent.Register<Block> e) {
+    public void registerBlock(RegistrationHandler.Helper<Block> helper) {
         this.block = new PortableTankBlock(this);
-        e.getRegistry().register(this.block);
+        helper.register(this.registryName, this.block);
     }
 
-    public void registerTileEntityType(RegistryEvent.Register<BlockEntityType<?>> e) {
-        this.tileEntityType = BlockEntityType.Builder.of((pos, state) -> new PortableTankTileEntity(this, pos, state), this.block).build(null);
-        this.tileEntityType.setRegistryName(this.getRegistryName() + "_tile");
-        e.getRegistry().register(this.tileEntityType);
+    public void registerBlockEntityType(RegistrationHandler.Helper<BlockEntityType<?>> helper) {
+        this.blockEntityType = BaseBlockEntityType.create(this::createBlockEntity, this.block);
+        helper.register(this.registryName + "_tile", this.blockEntityType);
     }
 
-    public void registerItem(RegistryEvent.Register<Item> e) {
+    public void registerItem(RegistrationHandler.Helper<Item> helper) {
         this.item = new PortableTankItem(this);
-        e.getRegistry().register(this.item);
+        helper.register(this.registryName, this.item);
     }
 }
