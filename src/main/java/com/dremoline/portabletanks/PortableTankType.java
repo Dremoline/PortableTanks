@@ -9,7 +9,7 @@ import net.minecraft.world.level.block.SoundType;
 import net.minecraft.world.level.block.entity.BlockEntityType;
 import net.minecraft.world.level.block.state.BlockBehaviour;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraft.world.level.material.Material;
+import net.minecraft.world.level.material.MapColor;
 
 import java.util.function.Supplier;
 
@@ -35,7 +35,7 @@ public enum PortableTankType {
     }
 
     public BlockBehaviour.Properties getBlockProperties() {
-        return BlockBehaviour.Properties.of(Material.METAL).sound(SoundType.METAL).strength(5);
+        return BlockBehaviour.Properties.of().mapColor(MapColor.METAL).sound(SoundType.METAL).strength(5);
     }
 
     public PortableTankBlock getBlock() {

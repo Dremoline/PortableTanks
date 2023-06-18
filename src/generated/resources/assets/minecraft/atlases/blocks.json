@@ -1,0 +1,68 @@
+{
+  "sources": [
+    {
+      "type": "minecraft:single",
+      "resource": "portabletanks:block/ultimate_portable_tank_bottom_off"
+    },
+    {
+      "type": "minecraft:single",
+      "resource": "portabletanks:block/ultimate_portable_tank_top"
+    },
+    {
+      "type": "minecraft:single",
+      "resource": "portabletanks:block/expert_portable_tank_bottom_off"
+    },
+    {
+      "type": "minecraft:single",
+      "resource": "portabletanks:block/ultimate_portable_tank_side"
+    },
+    {
+      "type": "minecraft:single",
+      "resource": "portabletanks:block/advanced_portable_tank_bottom_off"
+    },
+    {
+      "type": "minecraft:single",
+      "resource": "portabletanks:block/expert_portable_tank_bottom_on"
+    },
+    {
+      "type": "minecraft:single",
+      "resource": "portabletanks:block/basic_portable_tank_top"
+    },
+    {
+      "type": "minecraft:single",
+      "resource": "portabletanks:block/advanced_portable_tank_bottom_on"
+    },
+    {
+      "type": "minecraft:single",
+      "resource": "portabletanks:block/advanced_portable_tank_top"
+    },
+    {
+      "type": "minecraft:single",
+      "resource": "portabletanks:block/advanced_portable_tank_side"
+    },
+    {
+      "type": "minecraft:single",
+      "resource": "portabletanks:block/expert_portable_tank_top"
+    },
+    {
+      "type": "minecraft:single",
+      "resource": "portabletanks:block/basic_portable_tank_bottom_on"
+    },
+    {
+      "type": "minecraft:single",
+      "resource": "portabletanks:block/basic_portable_tank_side"
+    },
+    {
+      "type": "minecraft:single",
+      "resource": "portabletanks:block/ultimate_portable_tank_bottom_on"
+    },
+    {
+      "type": "minecraft:single",
+      "resource": "portabletanks:block/expert_portable_tank_side"
+    },
+    {
+      "type": "minecraft:single",
+      "resource": "portabletanks:block/basic_portable_tank_bottom_off"
+    }
+  ]
+}

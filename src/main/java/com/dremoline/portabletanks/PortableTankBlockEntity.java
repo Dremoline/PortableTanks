@@ -11,10 +11,10 @@ import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
 import net.minecraftforge.common.SoundActions;
 import net.minecraftforge.common.capabilities.Capability;
+import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fluids.FluidStack;
 import net.minecraftforge.fluids.FluidUtil;
-import net.minecraftforge.fluids.capability.CapabilityFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandler;
 import net.minecraftforge.fluids.capability.IFluidHandlerItem;
 
@@ -59,7 +59,7 @@ public class PortableTankBlockEntity extends BaseBlockEntity implements IFluidHa
         if (this.output && !this.fluidStack.isEmpty()) {
             BlockEntity entity = this.level.getBlockEntity(this.worldPosition.below());
             if (entity != null)
-                entity.getCapability(CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY)
+                entity.getCapability(ForgeCapabilities.FLUID_HANDLER)
                         .ifPresent(handler -> FluidUtil.tryFluidTransfer(handler, this, 1000, true));
         }
     }
@@ -75,7 +75,7 @@ public class PortableTankBlockEntity extends BaseBlockEntity implements IFluidHa
     @Nonnull
     @Override
     public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap, @Nullable Direction side) {
-        return CapabilityFluidHandler.FLUID_HANDLER_CAPABILITY.orEmpty(cap, LazyOptional.of(() -> this));
+        return ForgeCapabilities.FLUID_HANDLER.orEmpty(cap, LazyOptional.of(() -> this));
     }
 
     @Override

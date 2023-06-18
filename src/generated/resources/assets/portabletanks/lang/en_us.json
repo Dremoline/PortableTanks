@@ -1,6 +1,5 @@
 {
   "portabletanks.item_group": "Portable Tanks",
-  "portabletanks": "Portable Tanks",
   "portabletanks.portable_tank.info.capacity": "Capacity: %d mB",
   "portabletanks.portable_tank.info.stored": "Stored: %1$s %2$d / %3$d mB",
   "portabletanks.portable_tank.info.output": "Output: %s",

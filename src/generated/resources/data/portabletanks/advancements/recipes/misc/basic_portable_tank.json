@@ -2,13 +2,13 @@
   "parent": "minecraft:recipes/root",
   "display": {
     "icon": {
-      "item": "portabletanks:ultimate_portable_tank"
+      "item": "portabletanks:basic_portable_tank"
     },
     "title": {
-      "translate": "portabletanks.advancement.recipes/portabletanks/ultimate_portable_tank.title"
+      "translate": "portabletanks.advancement.recipes/misc/basic_portable_tank.title"
     },
     "description": {
-      "translate": "portabletanks.advancement.recipes/portabletanks/ultimate_portable_tank.description"
+      "translate": "portabletanks.advancement.recipes/misc/basic_portable_tank.description"
     },
     "frame": "task",
     "show_toast": false,
@@ -19,7 +19,7 @@
     "has_the_recipe": {
       "trigger": "minecraft:recipe_unlocked",
       "conditions": {
-        "recipe": "portabletanks:ultimate_portable_tank"
+        "recipe": "portabletanks:basic_portable_tank"
       }
     },
     "recipe_condition": {
@@ -27,9 +27,7 @@
       "conditions": {
         "items": [
           {
-            "items": [
-              "portabletanks:expert_portable_tank"
-            ]
+            "tag": "forge:ingots/iron"
           }
         ]
       }
@@ -43,7 +41,7 @@
   ],
   "rewards": {
     "recipes": [
-      "portabletanks:ultimate_portable_tank"
+      "portabletanks:basic_portable_tank"
     ]
   }
 }

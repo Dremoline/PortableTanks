@@ -2,7 +2,6 @@ package com.dremoline.portabletanks;
 
 import com.mojang.blaze3d.vertex.PoseStack;
 import com.mojang.blaze3d.vertex.VertexConsumer;
-import com.mojang.math.Matrix4f;
 import com.supermartijn642.core.ClientUtils;
 import com.supermartijn642.core.render.CustomBlockEntityRenderer;
 import net.minecraft.client.renderer.MultiBufferSource;
@@ -12,6 +11,7 @@ import net.minecraft.client.renderer.texture.TextureAtlasSprite;
 import net.minecraft.core.Direction;
 import net.minecraftforge.client.extensions.common.IClientFluidTypeExtensions;
 import net.minecraftforge.fluids.FluidStack;
+import org.joml.Matrix4f;
 
 /**
  * Created 7/19/2021 by SuperMartijn642
@@ -26,14 +26,14 @@ public class PortableTankRenderer implements CustomBlockEntityRenderer<PortableT
         if (fluidStack.isEmpty())
             return;
 
-        float fillPercentage = Math.min(1, (float)fluidStack.getAmount() / entity.getTankCapacity(0));
-        if(fluidStack.getFluid().getFluidType().isLighterThanAir())
+        float fillPercentage = Math.min(1, (float) fluidStack.getAmount() / entity.getTankCapacity(0));
+        if (fluidStack.getFluid().getFluidType().isLighterThanAir())
             renderFluid(poseStack, bufferSource, fluidStack, fillPercentage, 1, combinedLight);
         else
             renderFluid(poseStack, bufferSource, fluidStack, 1, fillPercentage, combinedLight);
     }
 
-    private static void renderFluid(PoseStack poseStack, MultiBufferSource bufferSource, FluidStack fluidStack, float alpha, float heightPercentage, int combinedLight){
+    private static void renderFluid(PoseStack poseStack, MultiBufferSource bufferSource, FluidStack fluidStack, float alpha, float heightPercentage, int combinedLight) {
         VertexConsumer vertexBuilder = bufferSource.getBuffer(RenderType.translucent());
         IClientFluidTypeExtensions fluidTypeExtensions = IClientFluidTypeExtensions.of(fluidStack.getFluid());
         TextureAtlasSprite sprite = ClientUtils.getMinecraft().getTextureAtlas(TextureAtlas.LOCATION_BLOCKS).apply(fluidTypeExtensions.getStillTexture(fluidStack));
