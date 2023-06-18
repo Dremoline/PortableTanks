@@ -1,0 +1,49 @@
+{
+  "parent": "minecraft:recipes/root",
+  "display": {
+    "icon": {
+      "item": "portabletanks:advanced_portable_tank"
+    },
+    "title": {
+      "translate": "portabletanks.advancement.recipes/portabletanks/advanced_portable_tank.title"
+    },
+    "description": {
+      "translate": "portabletanks.advancement.recipes/portabletanks/advanced_portable_tank.description"
+    },
+    "frame": "task",
+    "show_toast": false,
+    "announce_to_chat": false,
+    "hidden": false
+  },
+  "criteria": {
+    "has_the_recipe": {
+      "trigger": "minecraft:recipe_unlocked",
+      "conditions": {
+        "recipe": "portabletanks:advanced_portable_tank"
+      }
+    },
+    "recipe_condition": {
+      "trigger": "minecraft:inventory_changed",
+      "conditions": {
+        "items": [
+          {
+            "items": [
+              "portabletanks:basic_portable_tank"
+            ]
+          }
+        ]
+      }
+    }
+  },
+  "requirements": [
+    [
+      "has_the_recipe",
+      "recipe_condition"
+    ]
+  ],
+  "rewards": {
+    "recipes": [
+      "portabletanks:advanced_portable_tank"
+    ]
+  }
+}

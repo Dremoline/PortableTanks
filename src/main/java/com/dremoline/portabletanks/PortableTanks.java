@@ -1,21 +1,13 @@
 package com.dremoline.portabletanks;
 
 import com.dremoline.portabletanks.compatibility.PortableTanksTheOneProbePlugin;
-import net.minecraft.world.item.CreativeModeTab;
-import net.minecraft.world.item.Item;
-import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.crafting.RecipeSerializer;
-import net.minecraft.world.level.block.Block;
-import net.minecraft.world.level.block.entity.BlockEntityType;
-import net.minecraftforge.data.event.GatherDataEvent;
-import net.minecraftforge.eventbus.api.SubscribeEvent;
+import com.dremoline.portabletanks.generators.*;
+import com.supermartijn642.core.CommonUtils;
+import com.supermartijn642.core.item.CreativeItemGroup;
+import com.supermartijn642.core.registry.GeneratorRegistrationHandler;
+import com.supermartijn642.core.registry.RegistrationHandler;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.javafmlmod.FMLJavaModLoadingContext;
-import net.minecraftforge.registries.ForgeRegistries;
-import net.minecraftforge.registries.IForgeRegistry;
-import net.minecraftforge.registries.RegisterEvent;
-
-import java.util.Objects;
 
 /**
  * Created 7/7/2020 by SuperMartijn642
@@ -23,56 +15,29 @@ import java.util.Objects;
 @Mod("portabletanks")
 public class PortableTanks {
 
-    public static final CreativeModeTab GROUP = new CreativeModeTab("portabletanks") {
-        @Override
-        public ItemStack makeIcon(){
-            return new ItemStack(PortableTankType.BASIC.getBlock());
-        }
-    };
+    public static final CreativeItemGroup GROUP = CreativeItemGroup.create("portabletanks", () -> PortableTankType.BASIC.getBlock().asItem());
 
-    public PortableTanks(){
+    public PortableTanks() {
         FMLJavaModLoadingContext.get().getModEventBus().addListener(PortableTanksTheOneProbePlugin::interModEnqueue);
+
+        RegistrationHandler handler = RegistrationHandler.get("portabletanks");
+        for (PortableTankType type : PortableTankType.values()) {
+            handler.registerBlockCallback(type::registerBlock);
+            handler.registerBlockEntityTypeCallback(type::registerBlockEntityType);
+            handler.registerItemCallback(type::registerItem);
+        }
+        handler.registerRecipeSerializer("upgrade_tank", PortableTankUpgradeRecipe.SERIALIZER);
+
+        if (CommonUtils.getEnvironmentSide().isClient())
+            PortableTanksClient.initialize();
         PortableTanksConfig.init();
+
+        GeneratorRegistrationHandler generatorHandler = GeneratorRegistrationHandler.get("portabletanks");
+        generatorHandler.addGenerator(PortableTanksBlockStateGenerator::new);
+        generatorHandler.addGenerator(PortableTanksLanguageGenerator::new);
+        generatorHandler.addGenerator(PortableTanksLootTableGenerator::new);
+        generatorHandler.addGenerator(PortableTanksModelGenerator::new);
+        generatorHandler.addGenerator(PortableTanksRecipeGenerator::new);
+        generatorHandler.addGenerator(PortableTanksTagGenerator::new);
     }
-
-    @Mod.EventBusSubscriber(bus = Mod.EventBusSubscriber.Bus.MOD)
-    public static class RegistryEvents {
-
-        @SubscribeEvent
-        public static void onRegisterEvent(RegisterEvent e){
-            if(e.getRegistryKey().equals(ForgeRegistries.Keys.BLOCKS))
-                onBlockRegistry(Objects.requireNonNull(e.getForgeRegistry()));
-            else if(e.getRegistryKey().equals(ForgeRegistries.Keys.BLOCK_ENTITY_TYPES))
-                onTileRegistry(Objects.requireNonNull(e.getForgeRegistry()));
-            else if(e.getRegistryKey().equals(ForgeRegistries.Keys.ITEMS))
-                onItemRegistry(Objects.requireNonNull(e.getForgeRegistry()));
-            else if(e.getRegistryKey().equals(ForgeRegistries.Keys.RECIPE_SERIALIZERS))
-                onRecipeRegistry(Objects.requireNonNull(e.getForgeRegistry()));
-        }
-
-        public static void onBlockRegistry(IForgeRegistry<Block> registry){
-            for(PortableTankType type : PortableTankType.values())
-                type.registerBlock(registry);
-        }
-
-        public static void onTileRegistry(IForgeRegistry<BlockEntityType<?>> registry){
-            for(PortableTankType type : PortableTankType.values())
-                type.registerTileEntityType(registry);
-        }
-
-        public static void onItemRegistry(IForgeRegistry<Item> registry){
-            for(PortableTankType type : PortableTankType.values())
-                type.registerItem(registry);
-        }
-
-        public static void onRecipeRegistry(IForgeRegistry<RecipeSerializer<?>> registry){
-            registry.register("upgrade_tank", PortableTankUpgradeRecipe.SERIALIZER);
-        }
-
-        @SubscribeEvent
-        public static void onGatherData(GatherDataEvent e){
-            e.getGenerator().addProvider(e.includeServer(), new PortableTankBlockTagsProvider(e));
-        }
-    }
-
 }
