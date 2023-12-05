@@ -48,8 +48,8 @@ public class PortableTankRenderer implements CustomBlockEntityRenderer<PortableT
 
     private static void renderQuads(Matrix4f matrix, VertexConsumer buffer, TextureAtlasSprite sprite, float r, float g, float b, float alpha, float heightPercentage, int light) {
         float height = MIN_Y + (MAX_Y - MIN_Y) * heightPercentage;
-        float minU = sprite.getU(SIDE_MARGIN * 16), maxU = sprite.getU((1 - SIDE_MARGIN) * 16);
-        float minV = sprite.getV(MIN_Y * 16), maxV = sprite.getV(height * 16);
+        float minU = sprite.getU(SIDE_MARGIN), maxU = sprite.getU((1 - SIDE_MARGIN));
+        float minV = sprite.getV(MIN_Y), maxV = sprite.getV(height);
         // min z
         buffer.vertex(matrix, SIDE_MARGIN, MIN_Y, SIDE_MARGIN).color(r, g, b, alpha).uv(minU, minV).uv2(light).normal(0, 0, -1).endVertex();
         buffer.vertex(matrix, SIDE_MARGIN, height, SIDE_MARGIN).color(r, g, b, alpha).uv(minU, maxV).uv2(light).normal(0, 0, -1).endVertex();
@@ -72,8 +72,8 @@ public class PortableTankRenderer implements CustomBlockEntityRenderer<PortableT
         buffer.vertex(matrix, 1 - SIDE_MARGIN, MIN_Y, 1 - SIDE_MARGIN).color(r, g, b, alpha).uv(maxU, minV).uv2(light).normal(1, 0, 0).endVertex();
         // top
         if (heightPercentage < 1) {
-            minV = sprite.getV(SIDE_MARGIN * 16);
-            maxV = sprite.getV((1 - SIDE_MARGIN) * 16);
+            minV = sprite.getV(SIDE_MARGIN);
+            maxV = sprite.getV(1 - SIDE_MARGIN);
             buffer.vertex(matrix, SIDE_MARGIN, height, SIDE_MARGIN).color(r, g, b, alpha).uv(minU, minV).uv2(light).normal(0, 1, 0).endVertex();
             buffer.vertex(matrix, SIDE_MARGIN, height, 1 - SIDE_MARGIN).color(r, g, b, alpha).uv(minU, maxV).uv2(light).normal(0, 1, 0).endVertex();
             buffer.vertex(matrix, 1 - SIDE_MARGIN, height, 1 - SIDE_MARGIN).color(r, g, b, alpha).uv(maxU, maxV).uv2(light).normal(0, 1, 0).endVertex();
