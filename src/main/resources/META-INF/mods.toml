@@ -45,7 +45,7 @@ description='''${mod_description}'''
     versionRange="${minecraft_dependency}"
     ordering="NONE"
     side="BOTH"
-# Add a dependency on SuperMartijn642's Config Lib
+# Add a dependency on SuperMartijn642's Core Lib
 [[dependencies.${mod_id}]]
     modId="supermartijn642corelib"
     mandatory=true
