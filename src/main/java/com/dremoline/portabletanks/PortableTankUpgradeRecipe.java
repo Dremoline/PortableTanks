@@ -1,16 +1,15 @@
 package com.dremoline.portabletanks;
 
 import com.mojang.serialization.Codec;
-import net.minecraft.core.NonNullList;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
 import net.minecraft.world.inventory.CraftingContainer;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.CraftingBookCategory;
-import net.minecraft.world.item.crafting.Ingredient;
 import net.minecraft.world.item.crafting.RecipeSerializer;
 import net.minecraft.world.item.crafting.ShapedRecipe;
+import net.minecraft.world.item.crafting.ShapedRecipePattern;
 
 import javax.annotation.Nullable;
 
@@ -21,8 +20,8 @@ public class PortableTankUpgradeRecipe extends ShapedRecipe {
 
     public static final RecipeSerializer<PortableTankUpgradeRecipe> SERIALIZER = new PortableTankUpgradeRecipe.Serializer();
 
-    public PortableTankUpgradeRecipe(String group, CraftingBookCategory category, int recipeWidth, int recipeHeight, NonNullList<Ingredient> ingredients, ItemStack output, boolean showNotification) {
-        super(group, category, recipeWidth, recipeHeight, ingredients, output, showNotification);
+    public PortableTankUpgradeRecipe(String group, CraftingBookCategory category, ShapedRecipePattern pattern, ItemStack output, boolean showNotification) {
+        super(group, category, pattern, output, showNotification);
     }
 
     @Override
@@ -55,7 +54,7 @@ public class PortableTankUpgradeRecipe extends ShapedRecipe {
 
     public static class Serializer implements RecipeSerializer<PortableTankUpgradeRecipe> {
         private static final Codec<PortableTankUpgradeRecipe> CODEC = ShapedRecipe.Serializer.CODEC.xmap(
-                shapedRecipe -> new PortableTankUpgradeRecipe(shapedRecipe.getGroup(), shapedRecipe.category(), shapedRecipe.getWidth(), shapedRecipe.getHeight(), shapedRecipe.getIngredients(), shapedRecipe.getResultItem(null), shapedRecipe.showNotification()),
+                shapedRecipe -> new PortableTankUpgradeRecipe(shapedRecipe.getGroup(), shapedRecipe.category(), shapedRecipe.pattern, shapedRecipe.getResultItem(null), shapedRecipe.showNotification()),
                 portableTankUpgradeRecipe -> portableTankUpgradeRecipe
         );
 
@@ -68,7 +67,7 @@ public class PortableTankUpgradeRecipe extends ShapedRecipe {
         @Override
         public PortableTankUpgradeRecipe fromNetwork(FriendlyByteBuf buffer) {
             ShapedRecipe recipe = RecipeSerializer.SHAPED_RECIPE.fromNetwork(buffer);
-            return new PortableTankUpgradeRecipe(recipe.getGroup(), recipe.category(), recipe.getRecipeWidth(), recipe.getRecipeHeight(), recipe.getIngredients(), recipe.getResultItem(null), recipe.showNotification());
+            return new PortableTankUpgradeRecipe(recipe.getGroup(), recipe.category(), recipe.pattern, recipe.getResultItem(null), recipe.showNotification());
         }
 
         @Override
