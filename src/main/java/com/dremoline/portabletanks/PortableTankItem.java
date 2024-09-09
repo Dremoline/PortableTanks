@@ -1,6 +1,7 @@
 package com.dremoline.portabletanks;
 
 import com.supermartijn642.core.TextComponents;
+import com.supermartijn642.core.block.BaseBlock;
 import com.supermartijn642.core.item.BaseBlockItem;
 import com.supermartijn642.core.item.ItemProperties;
 import net.minecraft.ChatFormatting;
@@ -8,7 +9,6 @@ import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.level.BlockGetter;
 import net.minecraftforge.common.capabilities.Capability;
 import net.minecraftforge.common.capabilities.ForgeCapabilities;
 import net.minecraftforge.common.capabilities.ICapabilityProvider;
@@ -33,19 +33,20 @@ public class PortableTankItem extends BaseBlockItem {
     }
 
     @Override
-    protected void appendItemInformation(ItemStack stack, @Nullable BlockGetter level, Consumer<Component> info, boolean advanced) {
+    protected void appendItemInformation(ItemStack stack, Consumer<Component> info, boolean advanced) {
         FluidStack fluidStack = FluidStack.EMPTY;
-        if (stack.getOrCreateTag().contains("tileData"))
-            fluidStack = FluidStack.loadFluidStackFromNBT(stack.getOrCreateTag().getCompound("tileData").getCompound("fluid"));
+        CompoundTag tag = stack.get(BaseBlock.TILE_DATA);
+        if (tag != null)
+            fluidStack = FluidStack.loadFluidStackFromNBT(tag.getCompound("fluid"));
         Component capacity = TextComponents.string(Integer.toString(this.type.tankCapacity.get())).color(ChatFormatting.GOLD).get();
         if (fluidStack.isEmpty())
-            info.accept(TextComponents.translation("portabletanks.portable_tank.info.capacity", capacity).color(ChatFormatting.GRAY).get());
+            info.accept(TextComponents.translation("portabletanks.portable_tank.info.capacty", capacity).color(ChatFormatting.GRAY).get());
         else {
             Component fluidName = TextComponents.fromTextComponent(fluidStack.getDisplayName()).color(ChatFormatting.GOLD).get();
             Component amount = TextComponents.string(Integer.toString(fluidStack.getAmount())).color(ChatFormatting.GOLD).get();
             info.accept(TextComponents.translation("portabletanks.portable_tank.info.stored", fluidName, amount, capacity).color(ChatFormatting.GRAY).get());
         }
-        super.appendItemInformation(stack, level, info, advanced);
+        super.appendItemInformation(stack, info, advanced);
     }
 
     @Nullable
@@ -152,14 +153,16 @@ public class PortableTankItem extends BaseBlockItem {
         }
 
         private FluidStack getFluid() {
-            CompoundTag compound = this.stack.getOrCreateTag().getCompound("tileData");
+            CompoundTag compound = this.stack.get(BaseBlock.TILE_DATA);
             return compound.contains("fluid") ? FluidStack.loadFluidStackFromNBT(compound.getCompound("fluid")) : FluidStack.EMPTY;
         }
 
         private void setFluid(FluidStack fluid) {
-            CompoundTag tileData = this.stack.getOrCreateTag().getCompound("tileData");
+            CompoundTag tileData = this.stack.get(BaseBlock.TILE_DATA);
+            if (tileData == null)
+                tileData = new CompoundTag();
             tileData.put("fluid", fluid.writeToNBT(new CompoundTag()));
-            this.stack.getOrCreateTag().put("tileData", tileData);
+            this.stack.set(BaseBlock.TILE_DATA, tileData);
         }
     }
 }
