@@ -10,8 +10,8 @@
       ],
       "entries": [
         {
-          "type": "minecraft:item",
-          "name": "portabletanks:ultimate_portable_tank"
+          "name": "portabletanks:ultimate_portable_tank",
+          "type": "minecraft:item"
         }
       ]
     }
