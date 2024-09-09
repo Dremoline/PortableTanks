@@ -1,5 +1,6 @@
 package com.dremoline.portabletanks;
 
+import com.supermartijn642.core.CommonUtils;
 import com.supermartijn642.core.block.BaseBlockEntity;
 import com.supermartijn642.core.block.TickableBlockEntity;
 import net.minecraft.core.BlockPos;
@@ -40,14 +41,14 @@ public class PortableTankBlockEntity extends BaseBlockEntity implements IFluidHa
     protected CompoundTag writeData() {
         CompoundTag compound = new CompoundTag();
         compound.putBoolean("output", this.output);
-        compound.put("fluid", this.fluidStack.writeToNBT(new CompoundTag()));
+        compound.put("fluid", this.fluidStack.saveOptional(this.level.registryAccess()));
         return compound;
     }
 
     @Override
     protected void readData(CompoundTag compound) {
         this.output = compound.getBoolean("output");
-        this.fluidStack = FluidStack.loadFluidStackFromNBT(compound.getCompound("fluid"));
+        this.fluidStack = FluidStack.parseOptional(CommonUtils.getRegistryAccess(), compound.getCompound("fluid"));
     }
 
     @Override
@@ -90,7 +91,7 @@ public class PortableTankBlockEntity extends BaseBlockEntity implements IFluidHa
 
     @Override
     public int fill(FluidStack resource, FluidAction action) {
-        if (resource.isEmpty() || !(this.fluidStack.isEmpty() || this.fluidStack.isFluidEqual(resource)))
+        if (resource.isEmpty() || !(this.fluidStack.isEmpty() || FluidStack.isSameFluidSameComponents(this.fluidStack, resource)))
             return 0;
         int amount = Math.min(resource.getAmount(), this.getTankCapacity(0) - this.fluidStack.getAmount());
         if (action.execute()) {
@@ -147,11 +148,11 @@ public class PortableTankBlockEntity extends BaseBlockEntity implements IFluidHa
                     return true;
                 }
             }
-        } else if (this.fluidStack.isEmpty() || this.fluidStack.isFluidEqual(tankFluid)) {
+        } else if (this.fluidStack.isEmpty() || FluidStack.isSameFluidSameComponents(this.fluidStack, tankFluid)) {
             tankFluid = tankFluid.copy();
             tankFluid.setAmount(this.getTankCapacity(0) - this.fluidStack.getAmount());
             FluidStack amount = fluidHandler.drain(tankFluid, FluidAction.SIMULATE);
-            if (!amount.isEmpty() && (this.fluidStack.isEmpty() || this.fluidStack.isFluidEqual(amount))) {
+            if (!amount.isEmpty() && (this.fluidStack.isEmpty() || FluidStack.isSameFluidSameComponents(this.fluidStack, amount))) {
                 amount = fluidHandler.drain(tankFluid, FluidAction.EXECUTE);
                 amount.grow(this.fluidStack.getAmount());
                 this.fluidStack = amount;
