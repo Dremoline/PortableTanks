@@ -10,8 +10,8 @@
       ],
       "entries": [
         {
-          "type": "minecraft:item",
-          "name": "portabletanks:advanced_portable_tank"
+          "name": "portabletanks:advanced_portable_tank",
+          "type": "minecraft:item"
         }
       ]
     }

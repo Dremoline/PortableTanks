@@ -10,8 +10,8 @@
       ],
       "entries": [
         {
-          "type": "minecraft:item",
-          "name": "portabletanks:expert_portable_tank"
+          "name": "portabletanks:expert_portable_tank",
+          "type": "minecraft:item"
         }
       ]
     }
