@@ -23,9 +23,8 @@ import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import net.minecraftforge.common.capabilities.ForgeCapabilities;
-import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.fluids.capability.IFluidHandlerItem;
+import net.neoforged.neoforge.capabilities.Capabilities;
+import net.neoforged.neoforge.fluids.capability.IFluidHandlerItem;
 
 import javax.annotation.Nullable;
 
@@ -47,22 +46,19 @@ public class PortableTankBlock extends BaseBlock implements EntityHoldingBlock {
         ItemStack stack = player.getItemInHand(hand).copy();
         ItemStack fillStack = stack.copy();
         fillStack.setCount(1);
-        LazyOptional<IFluidHandlerItem> fluidHandlerOptional = fillStack.getCapability(ForgeCapabilities.FLUID_HANDLER_ITEM);
-        if (fluidHandlerOptional.isPresent()) {
+        IFluidHandlerItem fluidHandler = fillStack.getCapability(Capabilities.FluidHandler.ITEM);
+        if (fluidHandler != null) {
             BlockEntity entity = level.getBlockEntity(pos);
-            if (entity instanceof PortableTankBlockEntity) {
-                IFluidHandlerItem fluidHandler = fluidHandlerOptional.resolve().get();
-                if (((PortableTankBlockEntity) entity).interactWithItemFluidHandler(fluidHandler, player)) {
-                    stack.shrink(1);
-                    if (stack.isEmpty())
-                        player.setItemInHand(hand, fluidHandler.getContainer());
-                    else {
-                        player.setItemInHand(hand, stack);
-                        if (!player.getInventory().add(fluidHandler.getContainer()))
-                            player.drop(fluidHandler.getContainer(), false);
-                    }
-                    return InteractionFeedback.SUCCESS;
+            if (entity instanceof PortableTankBlockEntity && ((PortableTankBlockEntity) entity).interactWithItemFluidHandler(fluidHandler, player)) {
+                stack.shrink(1);
+                if (stack.isEmpty())
+                    player.setItemInHand(hand, fluidHandler.getContainer());
+                else {
+                    player.setItemInHand(hand, stack);
+                    if (!player.getInventory().add(fluidHandler.getContainer()))
+                        player.drop(fluidHandler.getContainer(), false);
                 }
+                return InteractionFeedback.SUCCESS;
             }
             return InteractionFeedback.CONSUME;
         } else if (stack.isEmpty() && player.isCrouching()) {

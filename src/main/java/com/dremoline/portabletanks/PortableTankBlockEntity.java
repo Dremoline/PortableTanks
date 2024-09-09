@@ -7,19 +7,15 @@ import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.sounds.SoundEvent;
 import net.minecraft.world.entity.player.Player;
-import net.minecraft.world.level.block.entity.BlockEntity;
 import net.minecraft.world.level.block.state.BlockState;
-import net.minecraftforge.common.SoundActions;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.capabilities.ForgeCapabilities;
-import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.FluidUtil;
-import net.minecraftforge.fluids.capability.IFluidHandler;
-import net.minecraftforge.fluids.capability.IFluidHandlerItem;
+import net.neoforged.neoforge.capabilities.Capabilities;
+import net.neoforged.neoforge.common.SoundActions;
+import net.neoforged.neoforge.fluids.FluidStack;
+import net.neoforged.neoforge.fluids.FluidUtil;
+import net.neoforged.neoforge.fluids.capability.IFluidHandler;
+import net.neoforged.neoforge.fluids.capability.IFluidHandlerItem;
 
 import javax.annotation.Nonnull;
-import javax.annotation.Nullable;
 
 public class PortableTankBlockEntity extends BaseBlockEntity implements IFluidHandler, TickableBlockEntity {
 
@@ -57,10 +53,9 @@ public class PortableTankBlockEntity extends BaseBlockEntity implements IFluidHa
     @Override
     public void update() {
         if (this.output && !this.fluidStack.isEmpty()) {
-            BlockEntity entity = this.level.getBlockEntity(this.worldPosition.below());
-            if (entity != null)
-                entity.getCapability(ForgeCapabilities.FLUID_HANDLER)
-                        .ifPresent(handler -> FluidUtil.tryFluidTransfer(handler, this, 1000, true));
+            IFluidHandler fluidHandler = Capabilities.FluidHandler.BLOCK.getCapability(this.level, this.worldPosition.below(), null, null, Direction.UP);
+            if (fluidHandler != null)
+                FluidUtil.tryFluidTransfer(fluidHandler, this, 1000, true);
         }
     }
 
@@ -70,12 +65,6 @@ public class PortableTankBlockEntity extends BaseBlockEntity implements IFluidHa
         this.level.setBlock(this.worldPosition, state.setValue(PortableTankBlock.OUTPUT, this.output), 6);
         this.dataChanged();
         return this.output;
-    }
-
-    @Nonnull
-    @Override
-    public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> cap, @Nullable Direction side) {
-        return ForgeCapabilities.FLUID_HANDLER.orEmpty(cap, LazyOptional.of(() -> this));
     }
 
     @Override

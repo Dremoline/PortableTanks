@@ -1,9 +1,11 @@
 package com.dremoline.portabletanks;
 
 import com.mojang.serialization.Codec;
+import com.mojang.serialization.codecs.RecordCodecBuilder;
 import net.minecraft.core.RegistryAccess;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.FriendlyByteBuf;
+import net.minecraft.util.ExtraCodecs;
 import net.minecraft.world.inventory.CraftingContainer;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.crafting.CraftingBookCategory;
@@ -20,8 +22,19 @@ public class PortableTankUpgradeRecipe extends ShapedRecipe {
 
     public static final RecipeSerializer<PortableTankUpgradeRecipe> SERIALIZER = new PortableTankUpgradeRecipe.Serializer();
 
+    private final String group;
+    private final CraftingBookCategory category;
+    private final ShapedRecipePattern pattern;
+    private final ItemStack result;
+    private final boolean showNotification;
+
     public PortableTankUpgradeRecipe(String group, CraftingBookCategory category, ShapedRecipePattern pattern, ItemStack output, boolean showNotification) {
         super(group, category, pattern, output, showNotification);
+        this.group = group;
+        this.category = category;
+        this.pattern = pattern;
+        this.result = output;
+        this.showNotification = showNotification;
     }
 
     @Override
@@ -53,26 +66,33 @@ public class PortableTankUpgradeRecipe extends ShapedRecipe {
     }
 
     public static class Serializer implements RecipeSerializer<PortableTankUpgradeRecipe> {
-        private static final Codec<PortableTankUpgradeRecipe> CODEC = ShapedRecipe.Serializer.CODEC.xmap(
-                shapedRecipe -> new PortableTankUpgradeRecipe(shapedRecipe.getGroup(), shapedRecipe.category(), shapedRecipe.pattern, shapedRecipe.getResultItem(null), shapedRecipe.showNotification()),
-                portableTankUpgradeRecipe -> portableTankUpgradeRecipe
-        );
+        private static final Codec<PortableTankUpgradeRecipe> CODEC = RecordCodecBuilder.create(instance ->
+                instance.group(
+                        ExtraCodecs.strictOptionalField(Codec.STRING, "group", "").forGetter(recipe -> recipe.group),
+                        CraftingBookCategory.CODEC.fieldOf("category").orElse(CraftingBookCategory.MISC).forGetter(recipe -> recipe.category),
+                        ShapedRecipePattern.MAP_CODEC.forGetter(recipe -> recipe.pattern),
+                        ItemStack.ITEM_WITH_COUNT_CODEC.fieldOf("result").forGetter(recipe -> recipe.result),
+                        ExtraCodecs.strictOptionalField(Codec.BOOL, "show_notification", true).forGetter(recipe -> recipe.showNotification)
+                ).apply(instance, PortableTankUpgradeRecipe::new));
 
         @Override
-        public Codec<PortableTankUpgradeRecipe> codec() {
+        public Codec<PortableTankUpgradeRecipe> codec(){
             return CODEC;
         }
 
-        @Nullable
         @Override
-        public PortableTankUpgradeRecipe fromNetwork(FriendlyByteBuf buffer) {
-            ShapedRecipe recipe = RecipeSerializer.SHAPED_RECIPE.fromNetwork(buffer);
-            return new PortableTankUpgradeRecipe(recipe.getGroup(), recipe.category(), recipe.pattern, recipe.getResultItem(null), recipe.showNotification());
+        public @Nullable PortableTankUpgradeRecipe fromNetwork(FriendlyByteBuf buffer){
+            //noinspection DataFlowIssue
+            return fromShapedRecipe(RecipeSerializer.SHAPED_RECIPE.fromNetwork(buffer));
         }
 
         @Override
-        public void toNetwork(FriendlyByteBuf buffer, PortableTankUpgradeRecipe recipe) {
+        public void toNetwork(FriendlyByteBuf buffer, PortableTankUpgradeRecipe recipe){
             RecipeSerializer.SHAPED_RECIPE.toNetwork(buffer, recipe);
+        }
+
+        private static PortableTankUpgradeRecipe fromShapedRecipe(ShapedRecipe recipe){
+            return new PortableTankUpgradeRecipe(recipe.getGroup(), recipe.category(), recipe.pattern, recipe.getResultItem(null), recipe.showNotification());
         }
     }
 }

@@ -5,7 +5,7 @@ import com.dremoline.portabletanks.PortableTankUpgradeRecipe;
 import com.supermartijn642.core.generator.RecipeGenerator;
 import com.supermartijn642.core.generator.ResourceCache;
 import net.minecraft.world.item.Items;
-import net.minecraftforge.common.Tags;
+import net.neoforged.neoforge.common.Tags;
 
 public class PortableTanksRecipeGenerator extends RecipeGenerator {
     public PortableTanksRecipeGenerator(ResourceCache cache) {

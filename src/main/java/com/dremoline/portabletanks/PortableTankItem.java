@@ -4,17 +4,12 @@ import com.supermartijn642.core.TextComponents;
 import com.supermartijn642.core.item.BaseBlockItem;
 import com.supermartijn642.core.item.ItemProperties;
 import net.minecraft.ChatFormatting;
-import net.minecraft.core.Direction;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.level.BlockGetter;
-import net.minecraftforge.common.capabilities.Capability;
-import net.minecraftforge.common.capabilities.ForgeCapabilities;
-import net.minecraftforge.common.capabilities.ICapabilityProvider;
-import net.minecraftforge.common.util.LazyOptional;
-import net.minecraftforge.fluids.FluidStack;
-import net.minecraftforge.fluids.capability.IFluidHandlerItem;
+import net.neoforged.neoforge.fluids.FluidStack;
+import net.neoforged.neoforge.fluids.capability.IFluidHandlerItem;
 
 import javax.annotation.Nonnull;
 import javax.annotation.Nullable;
@@ -48,16 +43,7 @@ public class PortableTankItem extends BaseBlockItem {
         super.appendItemInformation(stack, level, info, advanced);
     }
 
-    @Nullable
-    @Override
-    public ICapabilityProvider initCapabilities(ItemStack stack, @Nullable CompoundTag nbt) {
-        return new ItemFluidHandler(stack, this.type);
-    }
-
-    public static class ItemFluidHandler implements ICapabilityProvider, IFluidHandlerItem {
-
-        private final LazyOptional<IFluidHandlerItem> holder = LazyOptional.of(() -> this);
-
+    public static class ItemFluidHandler implements IFluidHandlerItem {
         private final ItemStack stack;
         private final PortableTankType type;
 
@@ -143,12 +129,6 @@ public class PortableTankItem extends BaseBlockItem {
         @Override
         public ItemStack getContainer() {
             return this.stack;
-        }
-
-        @Override
-        @Nonnull
-        public <T> LazyOptional<T> getCapability(@Nonnull Capability<T> capability, @Nullable Direction facing) {
-            return ForgeCapabilities.FLUID_HANDLER_ITEM.orEmpty(capability, this.holder);
         }
 
         private FluidStack getFluid() {
