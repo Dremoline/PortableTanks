@@ -8,12 +8,8 @@ import net.minecraft.core.HolderLookup;
 import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.RegistryFriendlyByteBuf;
 import net.minecraft.network.codec.StreamCodec;
-import net.minecraft.world.inventory.CraftingContainer;
 import net.minecraft.world.item.ItemStack;
-import net.minecraft.world.item.crafting.CraftingBookCategory;
-import net.minecraft.world.item.crafting.RecipeSerializer;
-import net.minecraft.world.item.crafting.ShapedRecipe;
-import net.minecraft.world.item.crafting.ShapedRecipePattern;
+import net.minecraft.world.item.crafting.*;
 
 /**
  * Created 7/19/2021 by SuperMartijn642
@@ -38,12 +34,12 @@ public class PortableTankUpgradeRecipe extends ShapedRecipe {
     }
 
     @Override
-    public ItemStack assemble(CraftingContainer inv, HolderLookup.Provider provider) {
+    public ItemStack assemble(CraftingInput input, HolderLookup.Provider provider) {
         CompoundTag compound = null;
         loop:
-        for (int i = 0; i < inv.getHeight(); i++) {
-            for (int j = 0; j < inv.getWidth(); j++) {
-                ItemStack stack = inv.getItem(i * inv.getWidth() + j);
+        for (int i = 0; i < input.height(); i++) {
+            for (int j = 0; j < input.width(); j++) {
+                ItemStack stack = input.getItem(i * input.width() + j);
                 if (stack.getItem() instanceof PortableTankItem) {
                     CompoundTag tag = stack.get(BaseBlock.TILE_DATA);
                     if (tag != null) {
@@ -60,7 +56,7 @@ public class PortableTankUpgradeRecipe extends ShapedRecipe {
             return result;
         }
 
-        return super.assemble(inv, provider);
+        return super.assemble(input, provider);
     }
 
     @Override
