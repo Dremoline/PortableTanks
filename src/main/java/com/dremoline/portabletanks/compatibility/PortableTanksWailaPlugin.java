@@ -39,6 +39,6 @@ public class PortableTanksWailaPlugin implements IWailaPlugin, IBlockComponentPr
 
     @Override
     public ResourceLocation getUid() {
-        return new ResourceLocation("portabletanks", "portable_tank_component");
+        return ResourceLocation.fromNamespaceAndPath("portabletanks", "portable_tank_component");
     }
 }

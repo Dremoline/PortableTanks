@@ -77,7 +77,7 @@ public class PortableTankBlock extends BaseBlock implements EntityHoldingBlock {
     public BlockState getStateForPlacement(BlockPlaceContext context) {
         BlockState state = super.getStateForPlacement(context);
         CompoundTag compound = context.getItemInHand().get(BaseBlock.TILE_DATA);
-        if (compound.contains("output"))
+        if (compound != null && compound.contains("output"))
             state = state.setValue(OUTPUT, compound.getBoolean("output"));
         return state;
     }
