@@ -2,7 +2,7 @@
   "parent": "minecraft:recipes/root",
   "display": {
     "icon": {
-      "item": "portabletanks:basic_portable_tank"
+      "id": "portabletanks:basic_portable_tank"
     },
     "title": {
       "translate": "portabletanks.advancement.recipes/misc/basic_portable_tank.title"
@@ -27,7 +27,7 @@
       "conditions": {
         "items": [
           {
-            "tag": "forge:ingots/iron"
+            "items": "#forge:ingots/iron"
           }
         ]
       }

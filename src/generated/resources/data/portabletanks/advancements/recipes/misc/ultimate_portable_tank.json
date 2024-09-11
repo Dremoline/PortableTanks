@@ -2,7 +2,7 @@
   "parent": "minecraft:recipes/root",
   "display": {
     "icon": {
-      "item": "portabletanks:ultimate_portable_tank"
+      "id": "portabletanks:ultimate_portable_tank"
     },
     "title": {
       "translate": "portabletanks.advancement.recipes/misc/ultimate_portable_tank.title"
@@ -27,9 +27,7 @@
       "conditions": {
         "items": [
           {
-            "items": [
-              "portabletanks:expert_portable_tank"
-            ]
+            "items": "portabletanks:expert_portable_tank"
           }
         ]
       }

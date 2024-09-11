@@ -11,6 +11,7 @@ import net.minecraft.nbt.CompoundTag;
 import net.minecraft.network.chat.Component;
 import net.minecraft.world.InteractionHand;
 import net.minecraft.world.entity.player.Player;
+import net.minecraft.world.item.BucketItem;
 import net.minecraft.world.item.ItemStack;
 import net.minecraft.world.item.context.BlockPlaceContext;
 import net.minecraft.world.level.BlockGetter;
@@ -23,11 +24,11 @@ import net.minecraft.world.level.block.state.properties.BooleanProperty;
 import net.minecraft.world.phys.Vec3;
 import net.minecraft.world.phys.shapes.CollisionContext;
 import net.minecraft.world.phys.shapes.VoxelShape;
-import net.minecraftforge.common.capabilities.ForgeCapabilities;
-import net.minecraftforge.common.util.LazyOptional;
 import net.minecraftforge.fluids.capability.IFluidHandlerItem;
+import net.minecraftforge.fluids.capability.wrappers.FluidBucketWrapper;
 
 import javax.annotation.Nullable;
+import java.util.Optional;
 
 public class PortableTankBlock extends BaseBlock implements EntityHoldingBlock {
 
@@ -47,11 +48,11 @@ public class PortableTankBlock extends BaseBlock implements EntityHoldingBlock {
         ItemStack stack = player.getItemInHand(hand).copy();
         ItemStack fillStack = stack.copy();
         fillStack.setCount(1);
-        LazyOptional<IFluidHandlerItem> fluidHandlerOptional = fillStack.getCapability(ForgeCapabilities.FLUID_HANDLER_ITEM);
+        Optional<IFluidHandlerItem> fluidHandlerOptional = Optional.of(fillStack).filter(s -> s.getItem() instanceof BucketItem).map(FluidBucketWrapper::new);
         if (fluidHandlerOptional.isPresent()) {
             BlockEntity entity = level.getBlockEntity(pos);
             if (entity instanceof PortableTankBlockEntity) {
-                IFluidHandlerItem fluidHandler = fluidHandlerOptional.resolve().get();
+                IFluidHandlerItem fluidHandler = fluidHandlerOptional.get();
                 if (((PortableTankBlockEntity) entity).interactWithItemFluidHandler(fluidHandler, player)) {
                     stack.shrink(1);
                     if (stack.isEmpty())
@@ -81,7 +82,7 @@ public class PortableTankBlock extends BaseBlock implements EntityHoldingBlock {
     public BlockState getStateForPlacement(BlockPlaceContext context) {
         BlockState state = super.getStateForPlacement(context);
         CompoundTag compound = context.getItemInHand().get(BaseBlock.TILE_DATA);
-        if (compound.contains("output"))
+        if (compound != null && compound.contains("output"))
             state = state.setValue(OUTPUT, compound.getBoolean("output"));
         return state;
     }

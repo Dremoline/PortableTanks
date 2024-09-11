@@ -2,7 +2,7 @@
   "parent": "minecraft:recipes/root",
   "display": {
     "icon": {
-      "item": "portabletanks:advanced_portable_tank"
+      "id": "portabletanks:advanced_portable_tank"
     },
     "title": {
       "translate": "portabletanks.advancement.recipes/misc/advanced_portable_tank.title"
@@ -27,9 +27,7 @@
       "conditions": {
         "items": [
           {
-            "items": [
-              "portabletanks:basic_portable_tank"
-            ]
+            "items": "portabletanks:basic_portable_tank"
           }
         ]
       }
